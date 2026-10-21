@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Fire alerts, site dashboards and downloadable reports for the CEPA–FAO GEF7 and GEF8 project provinces in Papua New Guinea.">
+<meta name="description" content="Fire alerts, site dashboards, firebreak planning and downloadable maps and reports for the CEPA–FAO GEF7 and GEF8 project sites in Papua New Guinea.">
 <style>html,body{margin:0}*{box-sizing:border-box}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>GEF Fire Watch PNG</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -15,7 +15,6 @@
 :root{
   --bg:#f4f3ef; --panel:#ffffff; --ink:#1c2321; --muted:#5f6b66; --line:#dcdcd4; --soft:#ecebe5;
   --forest:#1f3b2d; --forest-ink:#e7efe9; --ember:#c2410c; --ember-soft:#fbe7dc; --ok:#2f7d4a; --warn:#b7791f; --bad:#b42318;
-  --m07:#ffe08a; --m08:#ffa53d; --m09:#f0532a; --m10:#b5002a;
   --map-bg:#dfe3dc;
   --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif; --body:"Barlow","Segoe UI",Arial,sans-serif;
   color-scheme:light;
@@ -43,6 +42,12 @@ main{padding-block:14px 32px}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.35)}
 .lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.toggle{display:inline-flex;gap:6px;align-items:center;font-size:13px;cursor:pointer}
+.ln{width:18px;height:0;display:inline-block;border-top:3px solid;vertical-align:middle}
+.fbbar{display:flex;height:10px;border-radius:5px;overflow:hidden;border:1px solid var(--line)}
+.fbbar i{display:block;height:100%}
+.mini{width:100%;font-size:12.5px}.mini td,.mini th{padding:4px 6px}
+.about table{font-size:13.5px;margin:6px 0 10px}.about th{position:static}
 .mapbox{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--map-bg)}
 #map{height:min(72vh,760px);min-height:420px;background:var(--map-bg)}
 .layers{position:absolute;top:10px;right:10px;z-index:500;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;display:flex;flex-direction:column;gap:4px;max-width:220px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
@@ -104,6 +109,7 @@ tbody tr:hover td{background:var(--soft)}
 .ditem{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:13.5px}
 .ditem span{min-width:0;overflow-wrap:anywhere}
 .ditem .sz{color:var(--muted);font-size:12px;white-space:nowrap}
+.ditem .btnrow{flex-wrap:nowrap;gap:4px}.ditem .btnrow .btn{padding:5px 8px;font-size:12px}
 html.no-report .full-report{display:none!important}
 footer.site{border-top:1px solid var(--line);padding-block:14px 28px;font-size:12.5px;color:var(--muted)}
 .scroll{max-height:420px;overflow:auto}
@@ -143,6 +149,7 @@ footer.site{border-top:1px solid var(--line);padding-block:14px 28px;font-size:1
       </div>
       <span class="lbl">Month</span>
       <div class="seg" id="f-month"></div>
+      <label class="toggle"><input type="checkbox" id="f-nl"> Exclude low-confidence alerts</label>
       <span class="meta" id="count-line">Loading fire alerts…</span>
     </div>
     <div class="grid-map">
@@ -157,6 +164,8 @@ footer.site{border-top:1px solid var(--line);padding-block:14px 28px;font-size:1
           <summary>Layers</summary>
           <label><input type="checkbox" id="l-fires" checked> Fire alerts</label>
           <label><input type="checkbox" id="l-sites" checked> GEF sites</label>
+          <label><input type="checkbox" id="l-water"> Rivers and lakes</label>
+          <label><input type="checkbox" id="l-fb"> Fire along site boundaries (firebreak planning)</label>
           <label><input type="checkbox" id="l-dist"> Districts by fire density</label>
           <label><input type="checkbox" id="l-loge"> Logging, existing</label>
           <label><input type="checkbox" id="l-logp"> Logging, proposed</label>
@@ -191,6 +200,8 @@ footer.site{border-top:1px solid var(--line);padding-block:14px 28px;font-size:1
             <th class="n hn"><button data-k="fire_mean">Avg 2012–25</button></th>
             <th class="n"><button data-k="ratio">vs avg</button></th>
             <th class="n hn"><button data-k="ring_now">0–5 km</button></th>
+            <th class="n hn"><button data-k="ring10_now">0–10 km</button></th>
+            <th class="n hn"><button data-k="fb_rec" title="Boundary sections with fire alerts nearby in 6 or more years since 2012">Boundary sections, fire 6+ yrs</button></th>
             <th class="n hn"><button data-k="ia_now">Integrated alerts</button></th>
             <th class="n"><button data-k="tcl_total">Loss since 2001 (ha)</button></th>
           </tr></thead>
@@ -206,27 +217,52 @@ footer.site{border-top:1px solid var(--line);padding-block:14px 28px;font-size:1
 
   <section class="view about" id="view-about" hidden>
     <h2>What the map shows</h2>
-    <p>Each dot is a NASA VIIRS 375 m active-fire alert in the current fire season (<span class="lab"></span>), coloured by month. One fire can produce several alerts over several days, and heavy smoke or cloud can hide fires, so counts show fire activity, not burned area.</p>
-    <h2>How it updates</h2>
-    <p>The dashboard rebuilds itself automatically twice a day. It checks Global Forest Watch for new VIIRS fire alerts and, when there are any, refreshes every number, map and PDF report. Last update: <span id="upd2"></span>.</p>
-    <h2>How sites are compared</h2>
+    <p>Each dot is a NASA VIIRS 375 m active-fire alert in the current fire season (<span class="lab"></span>). The newest month is bright yellow and earlier months fade through pink and violet to blue. One fire can produce several alerts over several days, and smoke or cloud can hide fires, so alert counts show fire activity, not burned area.</p>
+    <p>Site outlines are coloured by type, not by fire level: green for protected and conserved areas (CCAs, WMAs, parks, sanctuary), white (blue on the street map) for Key Biodiversity Areas, and dashed for proposed areas. How a site compares with earlier years is shown in its panel and in the Sites table.</p>
+    <h2>Comparing years</h2>
     <p>For each site and province, alerts so far this season are compared with the same calendar period in every year since <span class="fy"></span>, using the Global Forest Watch Data API (the data behind PNG DAMS). Each site boundary is registered as a GFW geostore, so its PNG DAMS report opens for that exact boundary.</p>
+    <p><strong>Satellites.</strong> The Global Forest Watch VIIRS dataset is the VNP14IMGT product from the Suomi NPP satellite only. Alerts from NOAA-20 and NOAA-21, launched in 2017 and 2022, are not included, so the record since 2012 comes from one sensor and adding satellites does not inflate recent years.</p>
+    <p><strong>Confidence.</strong> Each alert has a confidence of low, nominal or high. Tick "Exclude low-confidence alerts" to drop low-confidence alerts from the map, the panels, the charts and the Sites table. In tests for Western Province, excluding them changed totals by 7–14% and barely changed comparisons between years, so all alerts are shown by default, as on Global Forest Watch. PDF reports, printed maps and firebreak counts use all alerts.</p>
+    <h2>Around each site</h2>
     <ul>
-      <li>Fires outside a site are counted in a ring around its boundary, using the alert points for the four project provinces. Sites that extend into Simbu, Jiwaka, Enga, Southern Highlands, Central or Morobe have minimum ring counts.</li>
+      <li>Alerts outside a site are counted 0–<span class="rk"></span> km and 0–<span class="mrk"></span> km from its boundary, measured in the site's own UTM zone. These counts include alerts in neighbouring provinces.</li>
+      <li>Open a site and use "Show alerts" to see only the alerts inside it, or only those within <span class="mrk"></span> km. Every site also has printable maps (JPG) of both views and a four-page PDF report.</li>
+    </ul>
+    <h2>Firebreak planning</h2>
+    <p>Each site boundary is cut into sections of about 1 km (longer for the largest sites, up to 300 sections). For every section the dashboard counts in how many years since <span class="fy"></span> VIIRS alerts fell in the edge zone, from <span class="fbo"></span> km outside to <span class="fbi"></span> km inside the boundary. Sections where fire comes back most years are where fire most often reaches the site, so they are the first places to consider for firebreaks, early-season burning or fire patrols.</p>
+    <p>This is a screening tool. Check each section on the ground with landowners and rangers: slope, wind, grassland and garden edges, and roads, rivers and bare ground that already stop fire. Sites without a surveyed boundary (approximate circles) give indicative results only.</p>
+    <h2>Nearest water</h2>
+    <p>Click a fire alert to see the nearest mapped river or lake, its distance and direction, and a line to it. Rivers come from HydroRIVERS, which maps streams with at least 10 km² of upstream catchment; lakes come from HydroLAKES (10 ha or larger). Line positions are approximate (often within 500 m), and creeks, springs, tanks and village water points are not mapped. Small streams can dry up in a drought, so confirm water on the ground before planning a response.</p>
+    <h2>Other measures</h2>
+    <ul>
       <li>Integrated alerts (GLAD-L, GLAD-S2, RADD) count 10–30 m alert pixels, not hectares, and rise in dry, smoky years.</li>
       <li>Tree cover loss is Hansen/UMD annual loss at more than 30% canopy.</li>
-      <li>District fire density is alerts per 100 km² on GADM 4.1 districts.</li>
+      <li>District fire density is alerts per 100 km² on OCHA COD-AB districts (PNG National Statistical Office, 2019).</li>
       <li>Proposed Mt Dorohere, Yasina, Artrohialika Lulume and Mt Giluwe, and the Kuk site, have no surveyed boundary yet, so each is a circle of its stated area around its GPS point.</li>
     </ul>
-    <h2>Sources</h2>
+    <h2>Layers and sources</h2>
+    <table>
+      <thead><tr><th>Layer</th><th>Source</th><th>Licence or terms</th></tr></thead>
+      <tbody>
+        <tr><td>Fire alerts</td><td>NASA FIRMS VIIRS (S-NPP), via the GFW Data API</td><td>NASA open data policy</td></tr>
+        <tr><td>Tree cover loss, integrated alerts</td><td>Hansen/UMD; GLAD, RADD via Global Forest Watch</td><td>CC BY 4.0</td></tr>
+        <tr><td>GEF sites</td><td>CEPA/FAO GEF7 and GEF8 project GIS</td><td>Project data; ask CEPA before reuse</td></tr>
+        <tr><td>Provinces and districts</td><td>OCHA COD-AB, PNG National Statistical Office</td><td>CC BY-IGO</td></tr>
+        <tr><td>Rivers and lakes</td><td>HydroRIVERS and HydroLAKES v1.0 (HydroSHEDS, Lehner &amp; Grill 2013)</td><td>CC BY 4.0</td></tr>
+        <tr><td>Satellite imagery, street map</td><td>Esri World Imagery; OpenStreetMap</td><td>Attribution shown on maps</td></tr>
+      </tbody>
+    </table>
+    <h2>How it updates</h2>
+    <p>A scheduled job runs twice a day. It checks Global Forest Watch for new alerts and, when there are any, rebuilds every number, map and PDF report. The firebreak baseline is extended once a year when a new season starts. Last update: <span id="upd2"></span>.</p>
+    <h2>Limitations</h2>
     <ul>
-      <li>NASA VIIRS fire alerts, Hansen/UMD tree cover loss and GFW integrated alerts: Global Forest Watch Data API.</li>
-      <li>Site, protected area, KBA, logging concession and mining lease layers: CEPA/FAO GEF7 and GEF8 project GIS.</li>
-      <li>Province and district boundaries: GADM 4.1. Basemaps: Esri World Imagery, OpenStreetMap.</li>
+      <li>A fire alert is a hot 375 m pixel seen by the satellite at about 1:30 am and 1:30 pm. One fire can produce many alerts, and small, brief or cloud-covered fires are missed.</li>
+      <li>Alert positions are pixel centres, so an alert can be up to about 300 m from the actual fire, which matters for alerts close to a boundary.</li>
+      <li>Site boundaries come from different sources and vary in accuracy.</li>
     </ul>
   </section>
 </main>
-<footer class="site"><div class="wrap">CEPA–FAO GEF7 &amp; GEF8 projects · GEF Fire Watch PNG. Data: NASA VIIRS via Global Forest Watch, Hansen/UMD, CEPA/FAO project GIS, GADM 4.1. Updated automatically; last update <span id="upd3"></span>.</div></footer>
+<footer class="site"><div class="wrap">CEPA–FAO GEF7 &amp; GEF8 projects · GEF Fire Watch PNG. Data: NASA VIIRS via Global Forest Watch, Hansen/UMD, CEPA/FAO project sites, OCHA COD-AB (CC BY-IGO), HydroSHEDS (CC BY 4.0). Updated automatically; last update <span id="upd3"></span>.</div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -237,21 +273,27 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.quer
 const nf=new Intl.NumberFormat('en'); const f0=v=>v==null?'–':nf.format(Math.round(v)); const f1=v=>v==null?'–':v.toLocaleString('en',{maximumFractionDigits:1,minimumFractionDigits:1});
 let SEASON={}, CUR='', MKEYS=[], MCOL={}, MONTHS={}, MSHORT={}, LAB='', FY=2012;
 const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const RAMP=['#ffe08a','#ffa53d','#f0532a','#b5002a','#7a0026','#4d0019'];
+// newest month first: bright yellow, then pink, violet and blues (no orange-red)
+const RAMP=['#ffd400','#ff5fb7','#b14cff','#5a6cf0','#3a4bb0','#2b3480','#232a63','#1d2250','#181c42','#141737','#10132d','#0d1025'];
+const FBC=['#b9c2be','#fff3a0','#ffc04d','#f08a24','#c2410c'], FBL=['No alerts nearby','Alerts in 1–2 years','Alerts in 3–5 years','Alerts in 6–9 years','Alerts in 10 or more years'];
+const WCOL='#4fc3f7';
 const monthOfDay=d=>new Date(Date.parse(SEASON.start)+d*864e5).toISOString().slice(0,7);
 function setupSeason(st){SEASON=st.season;LAB=SEASON.label;FY=SEASON.first_year;MKEYS=SEASON.months;
-  const n=MKEYS.length;MKEYS.forEach((m,i)=>{MCOL[m]=RAMP[Math.min(i,RAMP.length-1)];const mo=+m.slice(5)-1;let l=MN[mo];if(m===SEASON.end.slice(0,7)&&+SEASON.end.slice(8)<28)l='1–'+(+SEASON.end.slice(8))+' '+l;MONTHS[m]=l+' '+m.slice(0,4);MSHORT[m]=MN[mo].slice(0,3);});
+  const n=MKEYS.length;MKEYS.forEach((m,i)=>{MCOL[m]=RAMP[Math.min(n-1-i,RAMP.length-1)];const mo=+m.slice(5)-1;let l=MN[mo];if(m===SEASON.end.slice(0,7)&&+SEASON.end.slice(8)<28)l='1–'+(+SEASON.end.slice(8))+' '+l;MONTHS[m]=l+' '+m.slice(0,4);MSHORT[m]=MN[mo].slice(0,3);});
   CUR=Object.keys(st.provinces[Object.keys(st.provinces)[0]].years).sort().pop();
   const end=new Date(SEASON.end+'T00:00:00Z');$('#hdr-date').textContent=end.getUTCDate()+' '+MN[end.getUTCMonth()].slice(0,3)+' '+end.getUTCFullYear();
   ['#hdr-upd','#upd2','#upd3'].forEach(q=>{const e=$(q);if(e)e.textContent=SEASON.updated;});
   $$('.lab').forEach(e=>e.textContent=LAB);$$('.fy').forEach(e=>e.textContent=FY);
+  const C=st.config;$$('.rk').forEach(e=>e.textContent=C.ring_km);$$('.mrk').forEach(e=>e.textContent=C.map_ring_km);$$('.fbo').forEach(e=>e.textContent=C.fb_outer_km);$$('.fbi').forEach(e=>e.textContent=C.fb_inner_km);
   const fm=$('#f-month');fm.replaceChildren(el('button',{'data-v':'all','aria-pressed':'true'},'Whole season'),...MKEYS.map(m=>el('button',{'data-v':m,'aria-pressed':'false'},el('i',{class:'dot',style:'background:'+MCOL[m]}),MSHORT[m])));
   seg('f-month','month');
 }
 const PROVPROJ={'Western Highlands':'GEF7','Eastern Highlands':'GEF7','Western':'GEF8','Gulf':'GEF8'};
 const DAMS=gs=>'https://my.gfw-mapbuilder.org/v1.latest/index.html?appid=c8e4162ef1dd4891aad9b560ac88e55b&report=true&geostoreID='+gs+'&acLayer=user_features&acSublayer=undefined&objectid=undefined&b=webmap&l=en&d=5&ty=2001%2C2025&layers=&o=&gladconfirmed=false&gs='+SEASON.start+'&ge='+SEASON.end;
-const state={proj:'all',month:'all',sel:null};
-let plainLayer, D={}, map, fireLayer, siteLayer, distLayer, provLayer, logE, logP, elL, imgLayers=[];
+const state={proj:'all',month:'all',sel:null,nl:false,focus:'all'};
+const V=o=>state.nl&&o&&o.nl?Object.assign({},o,o.nl):o;   // switch every count to "excluding low-confidence"
+const isKBA=s=>s.type==='KBA', isProp=s=>String(s.status).startsWith('Proposed')||String(s.type).startsWith('Proposed');
+let plainLayer, D={}, map, fireLayer, siteLayer, distLayer, provLayer, ringLayer, waterLayer, fbLayer, linkLayer, logE, logP, elL, imgLayers=[], WATER=null, FBJ=null;
 
 function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2600);}
 function el(tag,attrs={},...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs)){if(k==='class')e.className=v;else if(k==='text')e.textContent=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v);}kids.flat().forEach(c=>c!=null&&e.append(c.nodeType?c:document.createTextNode(c)));return e;}
@@ -299,9 +341,10 @@ const ratioTxt=s=>s.ratio==null?(s.fire_now?'new':'–'):s.ratio.toFixed(1)+'×'
 function kpi(k,v,n){return el('div',{class:'kpi'},el('span',{class:'k',text:k}),el('span',{class:'v',text:v}),n?el('span',{class:'n',text:n}):null);}
 function renderOverview(){
   state.sel=null;setHash('');highlight();
-  const P=D.stats.provinces;const names=Object.keys(P).filter(n=>state.proj==='all'||PROVPROJ[n]===state.proj);
+  state.focus='all';
+  const P={};for(const k in D.stats.provinces)P[k]=V(D.stats.provinces[k]);const names=Object.keys(P).filter(n=>state.proj==='all'||PROVPROJ[n]===state.proj);
   const tot=names.reduce((a,n)=>a+P[n].years[CUR],0);const avgOf=y=>{const k=Object.keys(y).filter(x=>x!==CUR);return k.reduce((a,x)=>a+y[x],0)/k.length;};
-  const sites=D.stats.sites.filter(s=>state.proj==='all'||s.project.includes(state.proj));
+  const sites=D.stats.sites.map(V).filter(s=>state.proj==='all'||s.project.includes(state.proj));
   const above=sites.filter(s=>s.fire_now>s.fire_mean&&s.fire_now>0).length, rec=sites.filter(s=>s.fire_rank===1&&s.fire_now>0).length;
   panel.replaceChildren(
     el('h2',{text:state.proj==='all'?'GEF7 & GEF8 provinces':state.proj+' provinces'}),
@@ -309,16 +352,16 @@ function renderOverview(){
     el('div',{class:'provcards'},names.map(n=>{const y=P[n].years;const avg=avgOf(y);
       return el('button',{class:'pcard',onclick:()=>selectProvince(n)},el('span',{class:'t',text:n+' · '+PROVPROJ[n]}),el('span',{class:'v',text:f0(y[CUR])}),el('span',{class:'n',text:(y[CUR]/avg).toFixed(1)+'× average · '+Math.round(100*y[CUR]/y['2015'])+'% of 2015'}));})),
     bars(yearItems(names.reduce((acc,n)=>{for(const k in P[n].years)acc[k]=(acc[k]||0)+P[n].years[k];return acc;},{})),{title:'Fire alerts in the same period of each year',ref:null}),
-    el('p',{class:'note',text:'Click a province card, a district or a site outline on the map for details, charts and downloads. Click a fire dot to see its date.'}),
+    el('p',{class:'note',text:'Click a province card, a district or a site outline on the map for details, charts, printable maps and firebreak planning. Click a fire dot to see its date and the nearest mapped river or lake.'}),
     el('div',{class:'btnrow'},el('a',{class:'btn ghost',href:'reports/fire_situation_summary.pdf',download:'GEF_fire_situation_summary.pdf'},'Summary report (PDF)'),el('button',{class:'btn ghost',onclick:()=>showView('downloads')},'All downloads'))
   );
 }
 function selectProvince(n){
-  const p=D.stats.provinces[n];state.sel={kind:'prov',id:n};highlight();
+  const p=V(D.stats.provinces[n]);state.sel={kind:'prov',id:n};highlight();
   const y=p.years;const yk=Object.keys(y).filter(k=>k!==CUR);const avg=yk.reduce((a,k)=>a+y[k],0)/yk.length;
   const slug=n.toLowerCase().replace(/ /g,'-');
-  const dists=D.dist.features.filter(f=>f.properties.province===n).map(f=>f.properties).sort((a,b)=>b.fires-a.fires);
-  const sites=D.stats.sites.filter(s=>s.province.split('/').map(x=>x.trim()).map(x=>({EHP:'Eastern Highlands',WHP:'Western Highlands'}[x]||x)).includes(n));
+  const dists=D.dist.features.filter(f=>f.properties.province===n).map(f=>V(f.properties)).sort((a,b)=>b.fires-a.fires);
+  const sites=D.stats.sites.map(V).filter(s=>s.province.split('/').map(x=>x.trim()).map(x=>({EHP:'Eastern Highlands',WHP:'Western Highlands'}[x]||x)).includes(n));
   const tcl=p.tcl||{};const ti=Object.keys(tcl).sort().map(k=>({label:"'"+k.slice(2),v:tcl[k].loss,tip:k+': '+f0(tcl[k].loss)+' ha ('+f0(tcl[k].fire)+' ha due to fire)'}));
   panel.replaceChildren(
     el('button',{class:'back',onclick:renderOverview},'← All provinces'),
@@ -330,12 +373,12 @@ function selectProvince(n){
     el('div',{},el('h3',{text:'Districts'}),el('table',{},el('tbody',{},dists.map(d=>el('tr',{onclick:()=>selectDistrict(d.name)},el('td',{text:d.name}),el('td',{class:'n',text:f0(d.fires)}),el('td',{class:'n meta',text:f1(d.density)+' /100 km²'})))))),
     ti.length?bars(markMax(ti),{title:'Tree cover loss (ha)'+(n==='Western Highlands'?' · older, smaller GFW boundary':'')}):null,
     el('div',{},el('h3',{text:sites.length+' GEF sites'}),el('table',{},el('tbody',{},sites.sort((a,b)=>b.fire_now-a.fire_now).map(s=>el('tr',{onclick:()=>selectSite(s.id,true)},el('td',{text:s.site}),el('td',{class:'n',text:f0(s.fire_now)}),el('td',{class:'n meta',text:ratioTxt(s)})))))),
-    el('div',{class:'btnrow'},dlBtn('Province report (PDF)','reports/provinces/'+slug+'.pdf','GEF_fire_'+slug+'_province_report.pdf'),dlBtn('Monthly district map (PNG)','maps/overview/'+{'Western Highlands':'monthly_whp','Eastern Highlands':'monthly_ehp','Western':'monthly_western','Gulf':'monthly_gulf'}[n]+'.png','GEF_fire_'+slug+'_monthly_map.png',true))
+    el('div',{class:'btnrow'},dlBtn('Province report (PDF)','reports/provinces/'+(p.slug||slug)+'.pdf','GEF_fire_'+(p.slug||slug)+'_province_report.pdf'),dlBtn('Monthly district map (PNG)','maps/overview/monthly_'+(p.slug||slug)+'.png','GEF_fire_'+(p.slug||slug)+'_monthly_map.png',true))
   );
   const f=D.prov.features.find(f=>f.properties.name===n);if(f)map.fitBounds(L.geoJSON(f).getBounds(),{padding:[20,20]});
 }
 function selectDistrict(name){
-  const d=D.dist.features.find(f=>f.properties.name===name);if(!d)return;const p=d.properties;state.sel={kind:'dist',id:name};highlight();
+  const d=D.dist.features.find(f=>f.properties.name===name);if(!d)return;const p=V(d.properties);state.sel={kind:'dist',id:name};highlight();
   const mi=MKEYS.map(m=>({label:MSHORT[m],v:p.monthly[m]||0,tip:MONTHS[m]+': '+f0(p.monthly[m])+' alerts'}));
   panel.replaceChildren(
     el('button',{class:'back',onclick:()=>selectProvince(p.province)},'← '+p.province),
@@ -343,34 +386,52 @@ function selectDistrict(name){
     el('p',{class:'meta',text:p.province+' Province · '+p.project+' · '+f0(p.area_km2)+' km²'}),
     el('div',{class:'kpis'},kpi('Fire alerts, '+LAB,f0(p.fires),f1(p.density)+' per 100 km²'),kpi('In primary forest',f0(p.prim),(p.ifl?f0(p.ifl)+' in intact forest landscape':'none in intact forest'))),
     bars(markMax(mi),{title:'Fire alerts by month, this season'}),
-    el('p',{class:'note',text:'District counts join each alert point to GADM 4.1 district boundaries.'})
+    el('p',{class:'note',text:'District counts join each alert point to OCHA COD-AB district boundaries.'})
   );
   map.fitBounds(L.geoJSON(d).getBounds(),{padding:[20,20]});
 }
 function selectSite(id,zoom){
-  const s=D.stats.sites.find(x=>x.id===id);if(!s)return;state.sel={kind:'site',id};setHash(id);highlight();
-  const [ct,cc]=ratioClass(s);
+  const s0=D.stats.sites.find(x=>x.id===id);if(!s0)return;const s=V(s0);
+  if(!(state.sel&&state.sel.kind==='site'&&state.sel.id===id))state.focus='all';
+  state.sel={kind:'site',id};setHash(id);highlight();
+  const [ct,cc]=ratioClass(s);const C=D.stats.config;const fb=s.firebreak;const ny=+fb.years[1]-(+fb.years[0])+1;
+  const focusSeg=el('div',{class:'seg',role:'group','aria-label':'Show alerts'},[['all','All alerts'],['inside','Inside the site'],['ring','Within '+C.map_ring_km+' km']].map(([v,t])=>
+    el('button',{'aria-pressed':String(state.focus===v),onclick:()=>{state.focus=v;selectSite(id,false);refresh();}},t)));
+  const tot=fb.by_class.reduce((a,b)=>a+b,0)||1;
+  const fbBox=el('div',{},el('h3',{text:'Firebreak planning'}),
+    el('p',{class:'note',text:`The boundary is split into ${fb.sections} sections of about ${fb.section_km} km. ${fb.recurring} of them had fire alerts within ${C.fb_outer_km} km outside to ${C.fb_inner_km} km inside in 6 or more of the ${ny} years ${fb.years[0]}–${fb.years[1]}. This season ${f0(fb.edge_now)} alerts reached that edge zone.`}),
+    el('div',{class:'fbbar',title:'Share of boundary sections by years with fire nearby'},fb.by_class.map((n,i)=>n?el('i',{style:`width:${100*n/tot}%;background:${FBC[i]}`,title:FBL[i]+': '+n+' sections'}):null)),
+    fb.top.length?el('table',{class:'mini'},el('thead',{},el('tr',{},el('th',{text:'Section'}),el('th',{class:'n',text:'Years with fire'}),el('th',{class:'n',text:'This season'}),el('th',{text:''}))),
+      el('tbody',{},fb.top.map(t=>el('tr',{onclick:()=>zoomSection(id,t[0]-1)},el('td',{text:'#'+t[0]}),el('td',{class:'n',text:t[1]+' of '+ny}),el('td',{class:'n',text:f0(t[3])}),el('td',{class:'meta',text:'zoom ›'}))))):el('p',{class:'note',text:'No fire alerts near the boundary since '+FY+'.'}),
+    el('div',{class:'btnrow'},el('button',{class:'btn ghost',onclick:()=>{$('#l-fb').checked=true;syncLayers();zoomSite(id);}},'Show on map'),dlBtn('Firebreak map (JPG)','maps/sites/'+id+'_firebreak.jpg','GEF_firebreak_'+id+'_'+SEASON.end+'.jpg',true)),
+    el('p',{class:'note',text:'Sections where fire returns most years are candidates for firebreaks, early burning or patrols. Check them on the ground with landowners: slope, wind, grassland edges, and roads or rivers that already stop fire.'}));
   panel.replaceChildren(
     el('button',{class:'back',onclick:renderOverview},'← Overview'),
     el('h2',{text:s.site}),
     el('p',{class:'meta',text:[s.project,s.province,s.type,s.status,f0(s.area_ha)+' ha'].join(' · ')}),
-    el('div',{class:'chips'},el('span',{class:'chip '+cc,text:ct}),s.fire_rank===1&&s.fire_now>0?el('span',{class:'chip bad',text:'Highest since '+FY}):null),
+    el('div',{class:'chips'},el('span',{class:'chip '+cc,text:ct}),s.fire_rank===1&&s.fire_now>0?el('span',{class:'chip bad',text:'Highest since '+FY}):null,state.nl?el('span',{class:'chip mut',text:'Low-confidence excluded'}):null),
+    el('div',{},el('span',{class:'lbl',text:'Show alerts '}),focusSeg),
     el('div',{class:'kpis'},
       kpi('Fire alerts, '+LAB,f0(s.fire_now),'average '+f1(s.fire_mean)+' in earlier years · '+ratioTxt(s)),
-      kpi('Fire alerts 0–'+D.stats.config.ring_km+' km outside',f0(s.ring_now),'same period'),
+      kpi('Fire alerts 0–'+C.ring_km+' km outside',f0(s.ring_now),'0–'+C.map_ring_km+' km: '+f0(s.ring10_now)),
       kpi('Integrated alerts, same period',f0(s.ia_now),'a year earlier: '+f0(s.ia_prev)),
       kpi('Tree cover loss 2001–2025',f1(s.tcl_total)+' ha',(s.tcl_pct||0).toFixed(2)+'% of 2000 tree cover')),
     bars(yearItems(s.years),{title:'Fire alerts in the same period of each year',ref:s.fire_mean||null,refLabel:'earlier-years average'}),
     bars(markMax(monItems(s.monthly)),{title:'Fire alerts by month, this season'}),
+    fbBox,
     bars(markMax(Object.keys(s.tcl).sort().map(k=>({label:"'"+k.slice(2),v:s.tcl[k],tip:k+': '+f1(s.tcl[k])+' ha'}))),{title:'Tree cover loss (ha) since 2001',fmt:f1}),
-    el('div',{class:'btnrow'},
-      dlBtn('Site report (PDF)','reports/sites/'+s.id+'.pdf','GEF_fire_'+s.id+'_report.pdf'),
-      dlBtn('Site map (JPG)','maps/sites/'+s.id+'.jpg','GEF_fire_'+s.id+'_map.jpg',true),
-      el('a',{class:'btn ghost',href:DAMS(s.geostore),target:'_blank',rel:'noopener'},'PNG DAMS report ↗')),
-    el('p',{class:'note',text:'The PNG DAMS report is calculated live and can take up to a minute to appear for large areas such as WMAs and KBAs. If it stays blank, reload the page once.'}),     el('p',{class:'note',text:'Boundary: '+s.source+'. GFW geostore '+s.geostore+'.'})
+    el('div',{},el('h3',{text:'Print or share'}),el('div',{class:'btnrow',style:'margin-top:6px'},
+      dlBtn('Site report (PDF)','reports/sites/'+id+'.pdf','GEF_fire_'+id+'_report_'+SEASON.end+'.pdf'),
+      dlBtn('Map: site + '+C.map_ring_km+' km','maps/sites/'+id+'.jpg','GEF_fire_'+id+'_'+C.map_ring_km+'km_'+SEASON.end+'.jpg',true),
+      dlBtn('Map: inside site only','maps/sites/'+id+'_inside.jpg','GEF_fire_'+id+'_inside_'+SEASON.end+'.jpg',true),
+      el('a',{class:'btn ghost',href:DAMS(s.geostore),target:'_blank',rel:'noopener'},'PNG DAMS report ↗'))),
+    el('p',{class:'note',text:'The PNG DAMS report is calculated live and can take up to a minute to appear for large areas such as WMAs and KBAs. If it stays blank, reload the page once.'}),
+    el('p',{class:'note',text:'Boundary: '+s.source+'. GFW geostore '+s.geostore+'.'})
   );
-  if(zoom){showView('map');const f=D.sites.features.find(f=>f.properties.id===id);if(f)map.fitBounds(L.geoJSON(f).getBounds(),{padding:[60,60],maxZoom:13});}
+  if(zoom){showView('map');zoomSite(id);}
 }
+function zoomSite(id){const r=D.rings&&D.rings.features.find(f=>f.properties.id===id&&f.properties.km===D.stats.config.map_ring_km);const f=r||D.sites.features.find(f=>f.properties.id===id);if(f)map.fitBounds(L.geoJSON(f).getBounds(),{padding:[30,30],maxZoom:13});}
+async function zoomSection(id,k){$('#l-fb').checked=true;await syncLayers();const f=FBJ&&FBJ.features.find(f=>f.properties.s===id&&f.properties.k===k);if(f){const b=L.geoJSON(f).getBounds();map.fitBounds(b.pad(1.5),{maxZoom:15});fbPopup(f,b.getCenter());}}
 function setHash(id){try{history.replaceState(null,'',id?'#'+id:location.pathname+location.search);}catch(e){}}
 
 /* ---------- map ---------- */
@@ -384,25 +445,42 @@ const FireLayer=L.Layer.extend({
     const g=c.getContext('2d');g.scale(dpr,dpr);const z=m.getZoom();const r=z<7?1.3:z<8?1.8:z<10?2.6:z<12?3.6:4.6;
     const b=m.getBounds().pad(0.05);const rows=visibleFires();
     const order=MKEYS;
-    for(const mo of order){g.fillStyle=MCOL[mo];g.strokeStyle='rgba(0,0,0,.55)';g.lineWidth=z>=9?0.6:0.3;g.beginPath();
-      for(const p of rows){if(p[5]!==mo)continue;if(p[1]<b.getSouth()||p[1]>b.getNorth()||p[0]<b.getWest()||p[0]>b.getEast())continue;const pt=m.latLngToContainerPoint([p[1],p[0]]);g.moveTo(pt.x+r,pt.y);g.arc(pt.x,pt.y,r,0,6.2832);}
-      g.fill();if(z>=8)g.stroke();}
+    for(const mo of order){g.fillStyle=MCOL[mo];g.strokeStyle='rgba(0,0,0,.6)';g.lineWidth=z>=9?0.7:0.4;g.beginPath();
+      for(const p of rows){if(p[6]!==mo)continue;if(p[1]<b.getSouth()||p[1]>b.getNorth()||p[0]<b.getWest()||p[0]>b.getEast())continue;const pt=m.latLngToContainerPoint([p[1],p[0]]);g.moveTo(pt.x+r,pt.y);g.arc(pt.x,pt.y,r,0,6.2832);}
+      g.fill();g.stroke();}
   }
 });
-function visibleFires(){const pi=D.fires.provinces;return D.firesRows.filter(p=>(state.proj==='all'||PROVPROJ[pi[p[3]]]===state.proj)&&(state.month==='all'||p[5]===state.month));}
-function distColor(v){const br=[1,5,15,30,60,100],cs=['#fff3e0','#ffd8a8','#ffb070','#f57c3a','#d9480f','#a61e0b','#6b0f06'];let i=0;while(i<br.length&&v>=br[i])i++;return cs[i];}
-function distVal(p){return state.month==='all'?p.density:(100*(p.monthly[state.month]||0)/p.area_km2);}
-function siteColor(s){if(!s)return'#888';if(!s.fire_now)return'#9aa3a0';if(s.ratio==null||s.ratio>=3)return'#e5383b';if(s.ratio>=1.5)return'#f2a541';return'#3fbf6f';}
+function visibleFires(){
+  const pj=D.fires.projects,LOW=D.fires.low_bit;let base=D.firesRows,focus=false;
+  if(state.sel&&state.sel.kind==='site'&&state.focus!=='all'&&D.siteFires[state.sel.id]){const sf=D.siteFires[state.sel.id];base=[];focus=true;
+    for(let i=0;i<sf.length;i+=2){if(sf[i]<0)continue;if(state.focus==='inside'&&sf[i+1]!==0)continue;base.push(D.firesRows[sf[i]]);}}
+  return base.filter(p=>(focus||state.proj==='all'||pj[p[3]].includes(state.proj))&&(state.month==='all'||p[6]===state.month)&&(!state.nl||!(p[4]&LOW)));}
+function distColor(v){const br=[1,5,15,30,60,100],cs=['#f7f5fb','#dadaeb','#bcbddc','#9e9ac8','#807dba','#6a51a3','#4a1486'];let i=0;while(i<br.length&&v>=br[i])i++;return cs[i];}
+function distVal(p0){const p=V(p0);return state.month==='all'?p.density:(100*(p.monthly[state.month]||0)/p.area_km2);}
+// outlines by site type (green: protected and conserved areas, white/blue: KBAs), never red
+function siteColor(s){const img=$('#bg-img').checked;return isKBA(s)?(img?'#ffffff':'#2f5fd0'):(img?'#2ee6a6':'#0f9d74');}
 function highlight(){
   if(siteLayer)siteLayer.eachLayer(l=>{const id=l.feature.properties.id;const s=D.siteById[id];const on=state.sel&&state.sel.kind==='site'&&state.sel.id===id;const vis=state.proj==='all'||s.project.includes(state.proj);
-    l.setStyle({color:on?'#00e5ff':siteColor(s),weight:on?3.5:2,opacity:vis?1:0.15,fillOpacity:vis?(on?0.18:0.08):0,dashArray:s.status.startsWith('Proposed')||s.type.startsWith('Proposed')?'6 4':null});});
-  if(distLayer)distLayer.setStyle(f=>{const p=f.properties;const vis=state.proj==='all'||p.project===state.proj;const on=state.sel&&state.sel.kind==='dist'&&state.sel.id===p.name;return{color:on?'#00e5ff':'#333',weight:on?3:0.8,fillColor:distColor(distVal(p)),fillOpacity:vis?0.62:0,opacity:vis?0.9:0.2};});
-  if(provLayer)provLayer.setStyle(f=>{const on=state.sel&&state.sel.kind==='prov'&&state.sel.id===f.properties.name;const vis=state.proj==='all'||f.properties.project===state.proj;return{color:on?'#00e5ff':'#fff',weight:on?3.5:2,fill:true,fillOpacity:0,opacity:vis?0.95:0.35};});
+    const c=siteColor(s);l.setStyle({color:c,fillColor:c,weight:on?4.5:2,opacity:vis?1:0.15,fillOpacity:vis?(on?0.14:0.04):0,dashArray:isProp(s)?'7 5':null});});
+  if(ringLayer){map.removeLayer(ringLayer);ringLayer=null;}
+  if(state.sel&&state.sel.kind==='site'&&state.focus!=='inside'&&D.rings){const C=D.stats.config;
+    ringLayer=L.geoJSON({type:'FeatureCollection',features:D.rings.features.filter(f=>f.properties.id===state.sel.id)},{interactive:false,style:f=>({color:$('#bg-img').checked?'#ffffff':'#333',weight:1.3,opacity:.9,fill:false,dashArray:f.properties.km===C.ring_km?'6 5':'2 5'})}).addTo(map);}
+  if(distLayer)distLayer.setStyle(f=>{const p=f.properties;const vis=state.proj==='all'||p.project===state.proj;const on=state.sel&&state.sel.kind==='dist'&&state.sel.id===p.name;return{color:on?'#111':'#333',weight:on?3:0.8,fillColor:distColor(distVal(p)),fillOpacity:vis?0.62:0,opacity:vis?0.9:0.2};});
+  if(provLayer)provLayer.setStyle(f=>{const on=state.sel&&state.sel.kind==='prov'&&state.sel.id===f.properties.name;const vis=state.proj==='all'||f.properties.project===state.proj;return{color:'#111',weight:on?4:2,fill:true,fillOpacity:0,opacity:vis?0.9:0.35};});
 }
-function updateCount(){const n=visibleFires().length;$('#count-line').textContent=f0(n)+' fire alerts shown ('+(state.month==='all'?LAB:MONTHS[state.month])+')';}
+function updateCount(){const n=visibleFires().length;let t=f0(n)+' fire alerts shown ('+(state.month==='all'?LAB:MONTHS[state.month])+')';
+  if(state.sel&&state.sel.kind==='site'&&state.focus!=='all')t+=' · '+(state.focus==='inside'?'inside ':'within '+D.stats.config.map_ring_km+' km of ')+D.siteById[state.sel.id].site;
+  if(state.nl)t+=' · low-confidence excluded';$('#count-line').textContent=t;}
 function legend(){
-  const L_=$('#legend');L_.replaceChildren(el('strong',{text:'Fire alerts this season'}),...MKEYS.filter(m=>state.month==='all'||m===state.month).map(m=>el('div',{class:'row'},el('i',{class:'dot',style:'background:'+MCOL[m]}),MONTHS[m])));
-  if($('#l-sites').checked)L_.append(el('strong',{text:'Sites: fire vs average'}),...[['#e5383b','Over 3× or first on record'],['#f2a541','1.5–3×'],['#3fbf6f','Near or below average'],['#9aa3a0','No alerts this season']].map(([c,t])=>el('div',{class:'row'},el('i',{class:'sw',style:'background:transparent;border:2px solid '+c}),t)),el('div',{class:'row note',text:'Dashed outline: proposed area'}));
+  const L_=$('#legend');const img=$('#bg-img').checked;
+  L_.replaceChildren(el('strong',{text:'Fire alerts this season'}),...MKEYS.slice().reverse().filter(m=>state.month==='all'||m===state.month).map(m=>el('div',{class:'row'},el('i',{class:'dot',style:'background:'+MCOL[m]}),MONTHS[m])));
+  if($('#l-sites').checked)L_.append(el('strong',{text:'GEF sites'}),
+    el('div',{class:'row'},el('i',{class:'ln',style:'border-color:'+(img?'#2ee6a6':'#0f9d74')}),'Protected or conserved area (CCA, WMA, park)'),
+    el('div',{class:'row'},el('i',{class:'ln',style:'border-color:'+(img?'#ffffff':'#2f5fd0')+';outline:1px solid #0003'}),'Key Biodiversity Area'),
+    el('div',{class:'row'},el('i',{class:'ln',style:'border-top-style:dashed;border-color:'+(img?'#2ee6a6':'#0f9d74')}),'Proposed area (dashed)'),
+    ...(state.sel&&state.sel.kind==='site'&&state.focus!=='inside'?[el('div',{class:'row'},el('i',{class:'ln',style:'border-top:2px dashed #666'}),D.stats.config.ring_km+' km and '+D.stats.config.map_ring_km+' km (dotted) from the boundary')]:[]));
+  if($('#l-water').checked)L_.append(el('strong',{text:'Water (HydroSHEDS)'}),el('div',{class:'row'},el('i',{class:'ln',style:'border-color:'+WCOL}),'River or lake, approximate'));
+  if($('#l-fb').checked)L_.append(el('strong',{text:'Fire near site boundaries, '+FY+'–'+(SEASON.start.slice(0,4)-1)}),...FBC.map((c,i)=>el('div',{class:'row'},el('i',{class:'ln',style:'border-width:4px;border-color:'+c}),FBL[i])));
   if($('#l-dist').checked)L_.append(el('strong',{text:'District alerts per 100 km²'}),el('div',{class:'row'},...[0.5,3,10,20,45,80,150].map(v=>el('i',{class:'sw',style:'background:'+distColor(v)})),' 0 → 100+'));
   const ov=[['l-loge','#8e44ad','Logging, existing'],['l-logp','#c39bd3','Logging, proposed'],['l-el','#2e86c1','Mining exploration lease']].filter(o=>$('#'+o[0]).checked);
   ov.forEach(([_,c,t])=>L_.append(el('div',{class:'row'},el('i',{class:'sw',style:'background:'+c+'40;border:1.5px solid '+c}),t)));
@@ -410,24 +488,29 @@ function legend(){
 function refresh(){highlight();if(fireLayer&&map.hasLayer(fireLayer))fireLayer._draw();updateCount();legend();if(!state.sel)renderOverview();}
 
 async function init(){
-  const files=['stats','provinces','districts','sites','fires'];
-  const [stats,prov,dist,sites,fires]=await Promise.all(files.map(f=>fetch('data/'+f+(f==='stats'||f==='fires'?'.json':'.geojson'),{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(f);return r.json();})));
-  setupSeason(stats);dist.features.forEach(f=>Object.assign(f.properties,stats.districts.find(d=>d.name===f.properties.name)||{monthly:{},fires:0,density:0}));D={stats,prov,dist,sites,fires};D.siteById={};stats.sites.forEach(s=>D.siteById[s.id]=s);
-  D.firesRows=fires.rows.map(r=>{r[5]=monthOfDay(r[2]);return r;});
+  const files=['stats.json','provinces.geojson','districts.geojson','sites.geojson','fires.json'];
+  const [stats,prov,dist,sites,fires]=await Promise.all(files.map(f=>fetch('data/'+f,{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(f);return r.json();})));
+  setupSeason(stats);dist.features.forEach(f=>Object.assign(f.properties,stats.districts.find(d=>d.name===f.properties.name)||{monthly:{},fires:0,density:0}));D={stats,prov,dist,sites,fires,siteFires:{}};D.siteById={};stats.sites.forEach(s=>D.siteById[s.id]=s);
+  if(!fires.projects)fires.projects=fires.provinces.map(n=>PROVPROJ[n]||'');if(!fires.low_bit)fires.low_bit=8;
+  D.firesRows=fires.rows.map(r=>{r[6]=monthOfDay(r[2]);return r;});
+  const opt=f=>fetch('data/'+f,{cache:'no-cache'}).then(r=>r.ok?r.json():null).catch(()=>null);
+  [D.siteFires,D.rings]=await Promise.all([opt('site_fires.json').then(j=>j||{}),opt('site_rings.geojson')]);
   map=L.map('map',{zoomSnap:0.5,preferCanvas:true,attributionControl:true,maxBounds:[[-11.5,139],[-3.5,148.5]],minZoom:6});
   map.attributionControl.setPrefix(false);
   imgLayers=[L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery &copy; Esri, Maxar, Earthstar Geographics'})];
   plainLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap contributors'});
   imgLayers.forEach(l=>l.addTo(map));
-  provLayer=L.geoJSON(prov,{style:{color:'#fff',weight:2,fillOpacity:0},onEachFeature:(f,l)=>{l.bindTooltip(f.properties.name+' · '+f0(stats.provinces[f.properties.name].season_points)+' alerts this season',{sticky:true});l.on('click',e=>{L.DomEvent.stopPropagation(e);if(!pickFire(e))selectProvince(f.properties.name);});}}).addTo(map);
-  distLayer=L.geoJSON(dist,{onEachFeature:(f,l)=>{l.bindTooltip(()=>f.properties.name+': '+f0(state.month==='all'?f.properties.fires:f.properties.monthly[state.month])+' alerts',{sticky:true});l.on('click',e=>{L.DomEvent.stopPropagation(e);if(!pickFire(e))selectDistrict(f.properties.name);});}});
+  provLayer=L.geoJSON(prov,{style:{color:'#111',weight:2,fillOpacity:0},onEachFeature:(f,l)=>{l.bindTooltip(()=>f.properties.name+' · '+f0(V(stats.provinces[f.properties.name]).season_points)+' alerts this season',{sticky:true});l.on('click',e=>{L.DomEvent.stopPropagation(e);if(!pickFire(e))selectProvince(f.properties.name);});}}).addTo(map);
+  distLayer=L.geoJSON(dist,{onEachFeature:(f,l)=>{l.bindTooltip(()=>{const p=V(f.properties);return p.name+': '+f0(state.month==='all'?p.fires:p.monthly[state.month])+' alerts';},{sticky:true});l.on('click',e=>{L.DomEvent.stopPropagation(e);if(!pickFire(e))selectDistrict(f.properties.name);});}});
   const ov=(c,fill)=>({color:c,weight:1.2,fillColor:c,fillOpacity:fill});
-  fetch('data/logging_existing.geojson').then(r=>r.json()).then(j=>{logE=L.geoJSON(j,{style:ov('#8e44ad',0.18),onEachFeature:(f,l)=>l.bindTooltip('Logging (existing): '+(f.properties.name||''),{sticky:true})});syncLayers();});
-  fetch('data/logging_proposed.geojson').then(r=>r.json()).then(j=>{logP=L.geoJSON(j,{style:ov('#c39bd3',0.18),onEachFeature:(f,l)=>l.bindTooltip('Logging (proposed): '+(f.properties.name||''),{sticky:true})});syncLayers();});
-  fetch('data/mining_el.geojson').then(r=>r.json()).then(j=>{elL=L.geoJSON(j,{style:ov('#2e86c1',0.12),onEachFeature:(f,l)=>l.bindTooltip('Mining EL: '+(f.properties.name||''),{sticky:true})});syncLayers();});
-  siteLayer=L.geoJSON(sites,{onEachFeature:(f,l)=>{const s=D.siteById[f.properties.id];l.bindTooltip(s.site+' · '+f0(s.fire_now)+' alerts ('+ratioTxt(s)+')',{sticky:true,className:'site-tip'});l.on('click',e=>{L.DomEvent.stopPropagation(e);selectSite(s.id,false);});}});
+  fetch('data/logging_existing.geojson').then(r=>{if(!r.ok)throw new Error('absent');return r.json();}).then(j=>{logE=L.geoJSON(j,{style:ov('#8e44ad',0.18),onEachFeature:(f,l)=>l.bindTooltip('Logging (existing): '+(f.properties.name||''),{sticky:true})});syncLayers();}).catch(()=>{});
+  fetch('data/logging_proposed.geojson').then(r=>{if(!r.ok)throw new Error('absent');return r.json();}).then(j=>{logP=L.geoJSON(j,{style:ov('#c39bd3',0.18),onEachFeature:(f,l)=>l.bindTooltip('Logging (proposed): '+(f.properties.name||''),{sticky:true})});syncLayers();}).catch(()=>{});
+  fetch('data/mining_el.geojson').then(r=>{if(!r.ok)throw new Error('absent');return r.json();}).then(j=>{elL=L.geoJSON(j,{style:ov('#2e86c1',0.12),onEachFeature:(f,l)=>l.bindTooltip('Mining EL: '+(f.properties.name||''),{sticky:true})});syncLayers();}).catch(()=>{});
+  ['logging_existing','logging_proposed','mining_el'].forEach((n,i)=>fetch('data/'+n+'.geojson',{method:'HEAD'}).then(r=>{if(!r.ok){const c=$('#'+['l-loge','l-logp','l-el'][i]);c.closest('label').hidden=true;}}).catch(()=>{}));
+  siteLayer=L.geoJSON(sites,{onEachFeature:(f,l)=>{const s0=D.siteById[f.properties.id];l.bindTooltip(()=>{const s=V(s0);return s.site+' · '+s.type+' · '+f0(s.fire_now)+' alerts ('+ratioTxt(s)+')';},{sticky:true,className:'site-tip'});const s=s0;l.on('click',e=>{L.DomEvent.stopPropagation(e);selectSite(s.id,false);});}});
   fireLayer=new FireLayer();
   map.on('click',e=>{pickFire(e);});
+  map.on('popupclose',()=>{if(linkLayer){map.removeLayer(linkLayer);linkLayer=null;}});
   zoomTo('all');syncLayers();
   const h=location.hash.slice(1);if(h&&D.siteById[h])selectSite(h,true);else renderOverview();
   refresh();buildSites();buildDownloads();
@@ -436,14 +519,48 @@ function pickFire(e){
   if(!map.hasLayer(fireLayer))return false;const pt=map.latLngToContainerPoint(e.latlng);let best=null,bd=64;
   for(const p of visibleFires()){const q=map.latLngToContainerPoint([p[1],p[0]]);const d=(q.x-pt.x)**2+(q.y-pt.y)**2;if(d<bd){bd=d;best=p;}}
   if(!best)return false;const dt=new Date(Date.parse(SEASON.start)+best[2]*864e5);const fl=best[4];
-  L.popup().setLatLng([best[1],best[0]]).setContent(`<strong>VIIRS fire alert</strong><br>${dt.toUTCString().slice(5,16)} · ${D.fires.provinces[best[3]]}<br>${fl&1?'Tree cover over 30% (2000)':'Low tree cover'}${fl&2?' · primary forest':''}${fl&4?' · intact forest landscape':''}<br>${best[1].toFixed(4)}, ${best[0].toFixed(4)}`).openOn(map);return true;
+  const base=`<strong>VIIRS fire alert</strong>${fl&D.fires.low_bit?' (low confidence)':''}<br>${dt.toUTCString().slice(5,16)} · ${D.fires.provinces[best[3]]}<br>${fl&1?'Tree cover over 30% (2000)':'Low tree cover'}${fl&2?' · primary forest':''}${fl&4?' · intact forest landscape':''}<br>${best[1].toFixed(4)}, ${best[0].toFixed(4)}`;
+  const pop=L.popup({maxWidth:300}).setLatLng([best[1],best[0]]).setContent(base+'<br><span class="meta">Finding nearest mapped water…</span>').openOn(map);
+  const wi=best[5];
+  if(wi==null||wi<0){pop.setContent(base+`<br><em>No mapped river or lake within ${D.stats.config.water_max_km} km.</em>`);return true;}
+  loadWater().then(W=>{const w=W[wi];if(!w)return;const nr=nearestOn(w.ll,best[1],best[0]);
+    if(linkLayer)map.removeLayer(linkLayer);
+    linkLayer=L.layerGroup([L.polyline(w.ll,{color:'#00b7ff',weight:5,opacity:.9,interactive:false}),L.polyline([[best[1],best[0]],nr.ll],{color:'#ffffff',weight:2.5,dashArray:'5 5',interactive:false})]).addTo(map);
+    pop.setContent(base+`<br><strong>Nearest mapped water: ${nr.km<0.05?'under 50 m':nr.km.toFixed(1)+' km'} ${nr.km<0.05?'':'to the '+nr.dir}</strong><br>${waterDesc(w)}<br><span class="meta">Line positions are approximate (often within 500 m); creeks and village water points are not mapped. Small streams may be dry.</span>`);
+  }).catch(()=>pop.setContent(base));
+  return true;
 }
-function syncLayers(){
+async function loadWater(){if(WATER)return WATER;const j=await fetch('data/water.json').then(r=>r.json());
+  const dec=a=>{const o=[];let x=0,y=0;for(let i=0;i<a.length;i+=2){x+=a[i];y+=a[i+1];o.push([y/1e4,x/1e4]);}return o;};
+  WATER=[...j.rivers.map(r=>({kind:'river',order:r[0],flow:r[1],upland:r[2],ll:dec(r.slice(3))})),...j.lakes.map(l=>({kind:'lake',name:l[0],area:l[1],ll:dec(l.slice(2))}))];return WATER;}
+function waterDesc(w){return w.kind==='lake'?`Lake${w.name?' '+w.name:''}, ${w.area<1?Math.round(w.area*100)+' ha':f1(w.area)+' km²'}`:
+  `River or stream (Strahler order ${w.order}${w.order<=2?', small':w.order>=5?', large':''}), average flow about ${w.flow<1?w.flow.toFixed(2):f1(w.flow)} m³/s, catchment ${f0(w.upland)} km²`;}
+function nearestOn(ll,lat,lon){const k=Math.cos(lat*Math.PI/180)*111.32,K=110.57;let best={d:1e9,ll:ll[0]};
+  const P=[lon*k,lat*K];
+  for(let i=0;i<ll.length;i++){const a=[ll[i][1]*k,ll[i][0]*K],b=i+1<ll.length?[ll[i+1][1]*k,ll[i+1][0]*K]:a;const dx=b[0]-a[0],dy=b[1]-a[1];const L2=dx*dx+dy*dy;
+    let t=L2?((P[0]-a[0])*dx+(P[1]-a[1])*dy)/L2:0;t=Math.max(0,Math.min(1,t));const x=a[0]+t*dx,y=a[1]+t*dy;const d=Math.hypot(P[0]-x,P[1]-y);
+    if(d<best.d)best={d,ll:[y/K,x/k]};}
+  const b=(Math.atan2((best.ll[1]-lon)*k,(best.ll[0]-lat)*K)*180/Math.PI+360)%360;
+  return{km:best.d,ll:best.ll,dir:['north','north-east','east','south-east','south','south-west','west','north-west'][Math.round(b/45)%8]};}
+async function buildWater(){const W=await loadWater();const rd=L.canvas({tolerance:6});
+  waterLayer=L.layerGroup(W.map(w=>{const o={renderer:rd,color:WCOL,weight:w.kind==='lake'?1:0.6+0.35*(w.order||1),opacity:.9,fillColor:WCOL,fillOpacity:.45};
+    const l=w.kind==='lake'?L.polygon(w.ll,o):L.polyline(w.ll,o);
+    l.on('click',e=>{L.DomEvent.stopPropagation(e);if(pickFire(e))return;L.popup({maxWidth:300}).setLatLng(e.latlng).setContent('<strong>'+waterDesc(w)+'</strong><br><span class="meta">HydroSHEDS. Position approximate; check water on the ground.</span>').openOn(map);});return l;}));
+  return waterLayer;}
+async function buildFb(){FBJ=FBJ||await fetch('data/firebreak.geojson').then(r=>r.json());const rd=L.canvas({tolerance:5});
+  const casing=L.geoJSON(FBJ,{renderer:rd,interactive:false,style:f=>({color:'#000',weight:f.properties.c?8:3.5,opacity:.55})});
+  const top=L.geoJSON(FBJ,{renderer:rd,style:f=>({color:FBC[f.properties.c],weight:f.properties.c?5:2,opacity:1}),onEachFeature:(f,l)=>l.on('click',e=>{L.DomEvent.stopPropagation(e);fbPopup(f,e.latlng);})});
+  fbLayer=L.layerGroup([casing,top]);return fbLayer;}
+function fbPopup(f,ll){const p=f.properties,s=D.siteById[p.s],C=D.stats.config,y1=+SEASON.start.slice(0,4)-1,ny=y1-FY+1;const g=f.geometry.coordinates,m=g[Math.floor(g.length/2)];
+  L.popup({maxWidth:300}).setLatLng(ll).setContent(`<strong>${s.site}, boundary section ${p.k+1}</strong><br>Fire alerts ${C.fb_outer_km} km outside to ${C.fb_inner_km} km inside: in <strong>${p.y} of ${ny} years</strong> (${FY}–${y1}), ${f0(p.t)} alerts in total; ${f0(p.n)} this season.<br>${FBL[p.c]}.<br><span class="meta">Near ${m[1].toFixed(5)}, ${m[0].toFixed(5)}</span>`).openOn(map);}
+async function syncLayers(){
   const t=(on,l)=>{if(!l)return;on?(!map.hasLayer(l)&&l.addTo(map)):(map.hasLayer(l)&&map.removeLayer(l));};
+  try{if($('#l-water').checked&&!waterLayer){toast('Loading rivers and lakes…');await buildWater();}if($('#l-fb').checked&&!fbLayer)await buildFb();}catch(err){toast('Layer did not load');}
+  t($('#l-water').checked,waterLayer);t($('#l-fb').checked,fbLayer);
   t($('#l-dist').checked,distLayer);t($('#l-loge').checked,logE);t($('#l-logp').checked,logP);t($('#l-el').checked,elL);
   t($('#l-sites').checked,siteLayer);t($('#l-fires').checked,fireLayer);
   imgLayers.forEach(l=>t($('#bg-img').checked,l));t($('#bg-plain').checked,plainLayer);
-  if(provLayer)provLayer.bringToFront();if(siteLayer&&map.hasLayer(siteLayer))siteLayer.bringToFront();
+  if(provLayer)provLayer.bringToFront();if(siteLayer&&map.hasLayer(siteLayer))siteLayer.bringToFront();if(fbLayer&&map.hasLayer(fbLayer))fbLayer.eachLayer(l=>l.bringToFront());
   legend();highlight();
 }
 function zoomTo(k){const B={all:[[-9.6,140.8],[-4.9,146.5]],gef7:[[-7.0,143.6],[-5.1,146.4]],gef8:[[-9.6,140.8],[-5.0,146.3]]};map.fitBounds(B[k]);}
@@ -456,14 +573,14 @@ function buildSites(){
 }
 function drawSites(){
   const q=$('#s-q').value.toLowerCase(),pj=$('#s-proj').value;
-  const val=(s,k)=>k==='ratio'?(s.ratio==null?(s.fire_now?1e9:-1):s.ratio):s[k];
-  const rows=D.stats.sites.filter(s=>(!pj||s.project.includes(pj))&&(!q||(s.site+' '+s.province+' '+s.type).toLowerCase().includes(q))).sort((a,b)=>{const x=val(a,sk),y=val(b,sk);return(x<y?-1:x>y?1:0)*sd;});
+  const val=(s,k)=>k==='ratio'?(s.ratio==null?(s.fire_now?1e9:-1):s.ratio):k==='fb_rec'?s.firebreak.recurring:s[k];
+  const rows=D.stats.sites.map(V).filter(s=>(!pj||s.project.includes(pj))&&(!q||(s.site+' '+s.province+' '+s.type).toLowerCase().includes(q))).sort((a,b)=>{const x=val(a,sk),y=val(b,sk);return(x<y?-1:x>y?1:0)*sd;});
   $$('#s-table th').forEach(th=>th.setAttribute('aria-sort',th.querySelector('button').dataset.k===sk?(sd>0?'ascending':'descending'):'none'));
-  const mx=Math.max(...D.stats.sites.map(s=>s.fire_now));
+  const mx=Math.max(1,...D.stats.sites.map(s=>V(s).fire_now));
   $('#s-table tbody').replaceChildren(...rows.map(s=>el('tr',{onclick:()=>selectSite(s.id,true)},
     el('td',{text:s.site}),el('td',{class:'hn',text:s.project}),el('td',{class:'hn',text:s.type}),el('td',{class:'n hn',text:f0(s.area_ha)}),
     el('td',{class:'n'},el('i',{class:'bar',style:'width:'+Math.round(46*Math.sqrt(s.fire_now/mx))+'px'}),f0(s.fire_now)),el('td',{class:'n hn',text:f1(s.fire_mean)}),
-    el('td',{class:'n',style:'color:'+(ratioClass(s)[1]==='bad'?'var(--bad)':ratioClass(s)[1]==='warn'?'var(--warn)':'inherit'),text:ratioTxt(s)}),el('td',{class:'n hn',text:f0(s.ring_now)}),el('td',{class:'n hn',text:f0(s.ia_now)}),el('td',{class:'n',text:f1(s.tcl_total)}))));
+    el('td',{class:'n',style:'color:'+(ratioClass(s)[1]==='bad'?'var(--bad)':ratioClass(s)[1]==='warn'?'var(--warn)':'inherit'),text:ratioTxt(s)}),el('td',{class:'n hn',text:f0(s.ring_now)}),el('td',{class:'n hn',text:f0(s.ring10_now)}),el('td',{class:'n hn',text:f0(s.firebreak.recurring)+' of '+s.firebreak.sections}),el('td',{class:'n hn',text:f0(s.ia_now)}),el('td',{class:'n',text:f1(s.tcl_total)}))));
 }
 
 /* ---------- downloads ---------- */
@@ -475,23 +592,27 @@ function buildDownloads(){
   const tag=SEASON.end;
   const PROV=Object.keys(D.stats.provinces).map(n=>[n,D.stats.provinces[n].slug]);
   const ov=[['All GEF7 & GEF8 provinces, fire alerts','overview_all'],['GEF7 sites and fires','sites_gef7'],['GEF8 sites and fires','sites_gef8'],...PROV.map(([n,sl])=>[n+' by district and month','monthly_'+sl])];
-  const data=[['Site summary (CSV)','downloads/site_summary.csv','site_summary.csv'],['Site fire alerts by year (CSV)','downloads/site_fire_alerts_by_year.csv','site_fire_alerts_by_year.csv'],
+  const data=[['Site summary (CSV)','downloads/site_summary.csv','site_summary.csv'],
+    ['Fire alerts inside and within '+D.stats.config.map_ring_km+' km of each site, with distance to boundary and nearest water (CSV)','downloads/site_fire_alerts_10km.csv','site_fire_alerts_10km.csv'],
+    ['Firebreak planning: boundary sections with years of fire and coordinates (CSV)','downloads/firebreak_sections.csv','firebreak_sections.csv'],
+    ['Boundary sections with fire recurrence (GeoJSON)','data/firebreak.geojson','firebreak_sections.geojson'],
+    ['Site fire alerts by year, excluding low confidence (CSV)','downloads/site_fire_alerts_by_year_excl_low.csv','site_fire_alerts_by_year_excl_low.csv'],
+    ['Province fire alerts by year, excluding low confidence (CSV)','downloads/province_fire_alerts_by_year_excl_low.csv','province_fire_alerts_by_year_excl_low.csv'],['Site fire alerts by year (CSV)','downloads/site_fire_alerts_by_year.csv','site_fire_alerts_by_year.csv'],
     ['Site fire alerts by month (CSV)','downloads/site_fire_alerts_by_month.csv','site_fire_alerts_by_month.csv'],['Site tree cover loss (CSV)','downloads/site_tree_cover_loss_ha.csv','site_tree_cover_loss_ha.csv'],
     ['District fire alerts (CSV)','downloads/district_fire_alerts.csv','district_fire_alerts.csv'],['Province fire alerts by year (CSV)','downloads/province_fire_alerts_by_year.csv','province_fire_alerts_by_year.csv'],
     ['VIIRS fire alert points this season (CSV)','downloads/viirs_fire_alerts_season.csv','viirs_fire_alerts_season.csv'],['Site boundaries with statistics (GeoJSON)','downloads/gef_sites_fire.geojson','gef_sites_fire.geojson'],
-    ['Province boundaries (GeoJSON)','data/provinces.geojson','provinces.geojson'],['District boundaries (GeoJSON)','data/districts.geojson','districts.geojson'],
-    ['Logging concessions, existing (GeoJSON)','data/logging_existing.geojson','logging_concessions_existing.geojson'],['Logging concessions, proposed (GeoJSON)','data/logging_proposed.geojson','logging_concessions_proposed.geojson'],
-    ['Mining exploration leases (GeoJSON)','data/mining_el.geojson','mining_exploration_leases.geojson']];
+    ['Province boundaries (GeoJSON)','data/provinces.geojson','provinces.geojson'],['District boundaries (GeoJSON)','data/districts.geojson','districts.geojson']];
   $('#dlgrid').replaceChildren(
     el('div',{class:'card dlgroup'},el('h3',{text:'Fire situation summary'}),el('p',{text:'A three-page summary of the dashboard: key points, overview map, province trends, the district table and all project sites. It is regenerated with every update.'}),el('a',{class:'btn',href:'reports/fire_situation_summary.pdf',download:'GEF_fire_situation_summary_'+tag+'.pdf'},'Download summary (PDF)')),
     group('Province reports','Two-page PDF per province: key figures, monthly district maps, trends and the GEF sites in it.',PROV.map(([n,sl])=>item(n+' (PDF)','reports/provinces/'+sl+'.pdf','GEF_fire_'+sl+'_'+tag+'.pdf')),
       zipBtn('Save all (zip)',PROV.map(([n,sl])=>({url:'reports/provinces/'+sl+'.pdf',name:sl+'.pdf'})),'GEF_fire_province_reports_'+tag+'.zip')),
-    group('Site reports',"Two-page PDF per site: satellite map with this season's fires, key figures, fire trend, fires by month and tree cover loss.",S.map(s=>item(s.site+' · '+s.project,'reports/sites/'+s.id+'.pdf','GEF_fire_'+s.id+'_'+tag+'.pdf')),
+    group('Site reports',"Four-page PDF per site: map of fires inside and within "+D.stats.config.map_ring_km+" km, map of fires inside only, firebreak planning map with the boundary sections that burn most often, and trends.",S.map(s=>item(s.site+' · '+s.project,'reports/sites/'+s.id+'.pdf','GEF_fire_'+s.id+'_'+tag+'.pdf')),
       zipBtn('Save all '+S.length+' (zip)',S.map(s=>({url:'reports/sites/'+s.id+'.pdf',name:s.project.replace(/ & /,'_')+'/'+s.id+'.pdf'})),'GEF_fire_site_reports_'+tag+'.zip')),
     group('Overview maps','Province, project and monthly district maps (PNG).',ov.map(([t,f])=>item(t,'maps/overview/'+f+'.png',f+'_'+tag+'.png')),
       zipBtn('Save all (zip)',ov.map(([t,f])=>({url:'maps/overview/'+f+'.png',name:f+'.png'})),'GEF_fire_overview_maps_'+tag+'.zip')),
-    group('Site maps',"Satellite map of each site with its ring and this season's fire alerts by month (JPG).",S.map(s=>item(s.site,'maps/sites/'+s.id+'.jpg','GEF_fire_'+s.id+'_map_'+tag+'.jpg')),
-      zipBtn('Save all '+S.length+' (zip)',S.map(s=>({url:'maps/sites/'+s.id+'.jpg',name:s.id+'.jpg'})),'GEF_fire_site_maps_'+tag+'.zip')),
+    group('Site maps for printing',"Three satellite maps per site (JPG): fires inside and within "+D.stats.config.map_ring_km+" km, fires inside the site only, and firebreak planning.",
+      S.map(s=>el('div',{class:'ditem'},el('span',{},s.site),el('span',{class:'btnrow'},dlBtn(D.stats.config.map_ring_km+' km','maps/sites/'+s.id+'.jpg','GEF_fire_'+s.id+'_'+D.stats.config.map_ring_km+'km_'+tag+'.jpg',true),dlBtn('Inside','maps/sites/'+s.id+'_inside.jpg','GEF_fire_'+s.id+'_inside_'+tag+'.jpg',true),dlBtn('Firebreak','maps/sites/'+s.id+'_firebreak.jpg','GEF_firebreak_'+s.id+'_'+tag+'.jpg',true)))),
+      el('div',{class:'btnrow',style:'margin-bottom:8px'},...[['','10 km'],['_inside','inside'],['_firebreak','firebreak']].map(([suf,t])=>el('button',{class:'btn'+(suf?' ghost':''),onclick:e=>saveZip(S.map(s=>({url:'maps/sites/'+s.id+suf+'.jpg',name:s.id+suf+'.jpg'})),'GEF_site_maps_'+t.replace(' ','')+'_'+tag+'.zip',e.currentTarget)},'All '+t+' maps (zip)')))),
     group('Data','Tables and GIS layers behind the dashboard, as of the latest update.',data.map(([t,u,f])=>item(t,u,f.replace(/(\.[a-z]+)$/,'_'+tag+'$1'))),
       zipBtn('Save GIS layers and tables (zip)',data.map(([t,u,f])=>({url:u,name:f})),'GEF_fire_GIS_layers_and_tables_'+tag+'.zip'))
   );
@@ -503,6 +624,7 @@ $$('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showView(b.datas
 const seg=(id,key)=>$$('#'+id+' button').forEach(b=>b.addEventListener('click',()=>{$$('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));state[key]=b.dataset.v;refresh();}));
 seg('f-proj','proj');
 $$('#layers input').forEach(i=>i.addEventListener('change',syncLayers));
+$('#f-nl').addEventListener('change',e=>{state.nl=e.target.checked;refresh();if(state.sel){const k=state.sel;if(k.kind==='site')selectSite(k.id,false);else if(k.kind==='prov')selectProvince(k.id);else if(k.kind==='dist')selectDistrict(k.id);}drawSites();});
 $$('.zoombar button').forEach(b=>b.addEventListener('click',()=>zoomTo(b.dataset.z)));
 if(window.innerWidth<700){$('#layers').removeAttribute('open');$('#legendbox').removeAttribute('open');}
 init().catch(e=>{panel.replaceChildren(el('h2',{text:'Data did not load'}),el('p',{class:'meta',text:'Reload the page. If it keeps failing, the data files may still be uploading.'}));console.error(e);});
