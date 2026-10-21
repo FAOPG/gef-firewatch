@@ -367,7 +367,7 @@ function selectSite(id,zoom){
       dlBtn('Site report (PDF)','reports/sites/'+s.id+'.pdf','GEF_fire_'+s.id+'_report.pdf'),
       dlBtn('Site map (JPG)','maps/sites/'+s.id+'.jpg','GEF_fire_'+s.id+'_map.jpg',true),
       el('a',{class:'btn ghost',href:DAMS(s.geostore),target:'_blank',rel:'noopener'},'PNG DAMS report ↗')),
-    el('p',{class:'note',text:'Boundary: '+s.source+'. GFW geostore '+s.geostore+'.'})
+    el('p',{class:'note',text:'The PNG DAMS report is calculated live and can take up to a minute to appear for large areas such as WMAs and KBAs. If it stays blank, reload the page once.'}),     el('p',{class:'note',text:'Boundary: '+s.source+'. GFW geostore '+s.geostore+'.'})
   );
   if(zoom){showView('map');const f=D.sites.features.find(f=>f.properties.id===id);if(f)map.fitBounds(L.geoJSON(f).getBounds(),{padding:[60,60],maxZoom:13});}
 }
