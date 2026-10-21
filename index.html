@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Fire alerts, site dashboards and downloadable reports for the CEPA–FAO GEF7 and GEF8 project provinces in Papua New Guinea.">
+<style>html,body{margin:0}*{box-sizing:border-box}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>GEF Fire Watch PNG</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>.leaflet-image-layer,.leaflet-layer,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-pane,.leaflet-pane>canvas,.leaflet-pane>svg,.leaflet-tile,.leaflet-tile-container,.leaflet-zoom-box{position:absolute;left:0;top:0}.leaflet-container{overflow:hidden}.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-user-drag:none}.leaflet-tile::selection{background:0 0}.leaflet-safari .leaflet-tile{image-rendering:-webkit-optimize-contrast}.leaflet-safari .leaflet-tile-container{width:1600px;height:1600px;-webkit-transform-origin:0 0}.leaflet-marker-icon,.leaflet-marker-shadow{display:block}.leaflet-container .leaflet-overlay-pane svg{max-width:none!important;max-height:none!important}.leaflet-container .leaflet-marker-pane img,.leaflet-container .leaflet-shadow-pane img,.leaflet-container .leaflet-tile,.leaflet-container .leaflet-tile-pane img,.leaflet-container img.leaflet-image-layer{max-width:none!important;max-height:none!important;width:auto;padding:0}.leaflet-container img.leaflet-tile{mix-blend-mode:plus-lighter}.leaflet-container.leaflet-touch-zoom{-ms-touch-action:pan-x pan-y;touch-action:pan-x pan-y}.leaflet-container.leaflet-touch-drag{-ms-touch-action:pinch-zoom;touch-action:none;touch-action:pinch-zoom}.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom{-ms-touch-action:none;touch-action:none}.leaflet-container{-webkit-tap-highlight-color:transparent}.leaflet-container a{-webkit-tap-highlight-color:rgba(51,181,229,.4)}.leaflet-tile{filter:inherit;visibility:hidden}.leaflet-tile-loaded{visibility:inherit}.leaflet-zoom-box{width:0;height:0;-moz-box-sizing:border-box;box-sizing:border-box;z-index:800}.leaflet-overlay-pane svg{-moz-user-select:none}.leaflet-pane{z-index:400}.leaflet-tile-pane{z-index:200}.leaflet-overlay-pane{z-index:400}.leaflet-shadow-pane{z-index:500}.leaflet-marker-pane{z-index:600}.leaflet-tooltip-pane{z-index:650}.leaflet-popup-pane{z-index:700}.leaflet-map-pane canvas{z-index:100}.leaflet-map-pane svg{z-index:200}.leaflet-vml-shape{width:1px;height:1px}.lvml{behavior:url(#default#VML);display:inline-block;position:absolute}.leaflet-control{position:relative;z-index:800;pointer-events:visiblePainted;pointer-events:auto}.leaflet-bottom,.leaflet-top{position:absolute;z-index:1000;pointer-events:none}.leaflet-top{top:0}.leaflet-right{right:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-control{float:left;clear:both}.leaflet-right .leaflet-control{float:right}.leaflet-top .leaflet-control{margin-top:10px}.leaflet-bottom .leaflet-control{margin-bottom:10px}.leaflet-left .leaflet-control{margin-left:10px}.leaflet-right .leaflet-control{margin-right:10px}.leaflet-fade-anim .leaflet-popup{opacity:0;-webkit-transition:opacity .2s linear;-moz-transition:opacity .2s linear;transition:opacity .2s linear}.leaflet-fade-anim .leaflet-map-pane .leaflet-popup{opacity:1}.leaflet-zoom-animated{-webkit-transform-origin:0 0;-ms-transform-origin:0 0;transform-origin:0 0}svg.leaflet-zoom-animated{will-change:transform}.leaflet-zoom-anim .leaflet-zoom-animated{-webkit-transition:-webkit-transform .25s cubic-bezier(0,0,.25,1);-moz-transition:-moz-transform .25s cubic-bezier(0,0,.25,1);transition:transform .25s cubic-bezier(0,0,.25,1)}.leaflet-pan-anim .leaflet-tile,.leaflet-zoom-anim .leaflet-tile{-webkit-transition:none;-moz-transition:none;transition:none}.leaflet-zoom-anim .leaflet-zoom-hide{visibility:hidden}.leaflet-interactive{cursor:pointer}.leaflet-grab{cursor:-webkit-grab;cursor:-moz-grab;cursor:grab}.leaflet-crosshair,.leaflet-crosshair .leaflet-interactive{cursor:crosshair}.leaflet-control,.leaflet-popup-pane{cursor:auto}.leaflet-dragging .leaflet-grab,.leaflet-dragging .leaflet-grab .leaflet-interactive,.leaflet-dragging .leaflet-marker-draggable{cursor:move;cursor:-webkit-grabbing;cursor:-moz-grabbing;cursor:grabbing}.leaflet-image-layer,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-pane>svg path,.leaflet-tile-container{pointer-events:none}.leaflet-image-layer.leaflet-interactive,.leaflet-marker-icon.leaflet-interactive,.leaflet-pane>svg path.leaflet-interactive,svg.leaflet-image-layer.leaflet-interactive path{pointer-events:visiblePainted;pointer-events:auto}.leaflet-container{background:#ddd;outline-offset:1px}.leaflet-container a{color:#0078a8}.leaflet-zoom-box{border:2px dotted #38f;background:rgba(255,255,255,.5)}.leaflet-container{font-family:"Helvetica Neue",Arial,Helvetica,sans-serif;font-size:12px;font-size:.75rem;line-height:1.5}.leaflet-bar{box-shadow:0 1px 5px rgba(0,0,0,.65);border-radius:4px}.leaflet-bar a{background-color:#fff;border-bottom:1px solid #ccc;width:26px;height:26px;line-height:26px;display:block;text-align:center;text-decoration:none;color:#000}.leaflet-bar a,.leaflet-control-layers-toggle{background-position:50% 50%;background-repeat:no-repeat;display:block}.leaflet-bar a:focus,.leaflet-bar a:hover{background-color:#f4f4f4}.leaflet-bar a:first-child{border-top-left-radius:4px;border-top-right-radius:4px}.leaflet-bar a:last-child{border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom:none}.leaflet-bar a.leaflet-disabled{cursor:default;background-color:#f4f4f4;color:#bbb}.leaflet-touch .leaflet-bar a{width:30px;height:30px;line-height:30px}.leaflet-touch .leaflet-bar a:first-child{border-top-left-radius:2px;border-top-right-radius:2px}.leaflet-touch .leaflet-bar a:last-child{border-bottom-left-radius:2px;border-bottom-right-radius:2px}.leaflet-control-zoom-in,.leaflet-control-zoom-out{font:bold 18px 'Lucida Console',Monaco,monospace;text-indent:1px}.leaflet-touch .leaflet-control-zoom-in,.leaflet-touch .leaflet-control-zoom-out{font-size:22px}.leaflet-control-layers{box-shadow:0 1px 5px rgba(0,0,0,.4);background:#fff;border-radius:5px}.leaflet-control-layers-toggle{background-image:url(images/layers.png);width:36px;height:36px}.leaflet-retina .leaflet-control-layers-toggle{background-image:url(images/layers-2x.png);background-size:26px 26px}.leaflet-touch .leaflet-control-layers-toggle{width:44px;height:44px}.leaflet-control-layers .leaflet-control-layers-list,.leaflet-control-layers-expanded .leaflet-control-layers-toggle{display:none}.leaflet-control-layers-expanded .leaflet-control-layers-list{display:block;position:relative}.leaflet-control-layers-expanded{padding:6px 10px 6px 6px;color:#333;background:#fff}.leaflet-control-layers-scrollbar{overflow-y:scroll;overflow-x:hidden;padding-right:5px}.leaflet-control-layers-selector{margin-top:2px;position:relative;top:1px}.leaflet-control-layers label{display:block;font-size:13px;font-size:1.08333em}.leaflet-control-layers-separator{height:0;border-top:1px solid #ddd;margin:5px -10px 5px -6px}.leaflet-default-icon-path{background-image:url(images/marker-icon.png)}.leaflet-container .leaflet-control-attribution{background:#fff;background:rgba(255,255,255,.8);margin:0}.leaflet-control-attribution,.leaflet-control-scale-line{padding:0 5px;color:#333;line-height:1.4}.leaflet-control-attribution a{text-decoration:none}.leaflet-control-attribution a:focus,.leaflet-control-attribution a:hover{text-decoration:underline}.leaflet-attribution-flag{display:inline!important;vertical-align:baseline!important;width:1em;height:.6669em}.leaflet-left .leaflet-control-scale{margin-left:5px}.leaflet-bottom .leaflet-control-scale{margin-bottom:5px}.leaflet-control-scale-line{border:2px solid #777;border-top:none;line-height:1.1;padding:2px 5px 1px;white-space:nowrap;-moz-box-sizing:border-box;box-sizing:border-box;background:rgba(255,255,255,.8);text-shadow:1px 1px #fff}.leaflet-control-scale-line:not(:first-child){border-top:2px solid #777;border-bottom:none;margin-top:-2px}.leaflet-control-scale-line:not(:first-child):not(:last-child){border-bottom:2px solid #777}.leaflet-touch .leaflet-bar,.leaflet-touch .leaflet-control-attribution,.leaflet-touch .leaflet-control-layers{box-shadow:none}.leaflet-touch .leaflet-bar,.leaflet-touch .leaflet-control-layers{border:2px solid rgba(0,0,0,.2);background-clip:padding-box}.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px}.leaflet-popup-content-wrapper{padding:1px;text-align:left;border-radius:12px}.leaflet-popup-content{margin:13px 24px 13px 20px;line-height:1.3;font-size:13px;font-size:1.08333em;min-height:1px}.leaflet-popup-content p{margin:17px 0;margin:1.3em 0}.leaflet-popup-tip-container{width:40px;height:20px;position:absolute;left:50%;margin-top:-1px;margin-left:-20px;overflow:hidden;pointer-events:none}.leaflet-popup-tip{width:17px;height:17px;padding:1px;margin:-10px auto 0;pointer-events:auto;-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#fff;color:#333;box-shadow:0 3px 14px rgba(0,0,0,.4)}.leaflet-container a.leaflet-popup-close-button{position:absolute;top:0;right:0;border:none;text-align:center;width:24px;height:24px;font:16px/24px Tahoma,Verdana,sans-serif;color:#757575;text-decoration:none;background:0 0}.leaflet-container a.leaflet-popup-close-button:focus,.leaflet-container a.leaflet-popup-close-button:hover{color:#585858}.leaflet-popup-scrolled{overflow:auto}.leaflet-oldie .leaflet-popup-content-wrapper{-ms-zoom:1}.leaflet-oldie .leaflet-popup-tip{width:24px;margin:0 auto}.leaflet-oldie .leaflet-control-layers,.leaflet-oldie .leaflet-control-zoom,.leaflet-oldie .leaflet-popup-content-wrapper,.leaflet-oldie .leaflet-popup-tip{border:1px solid #999}.leaflet-div-icon{background:#fff;border:1px solid #666}.leaflet-tooltip{position:absolute;padding:6px;background-color:#fff;border:1px solid #fff;border-radius:3px;color:#222;white-space:nowrap;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;pointer-events:none;box-shadow:0 1px 3px rgba(0,0,0,.4)}.leaflet-tooltip.leaflet-interactive{cursor:pointer;pointer-events:auto}.leaflet-tooltip-bottom:before,.leaflet-tooltip-left:before,.leaflet-tooltip-right:before,.leaflet-tooltip-top:before{position:absolute;pointer-events:none;border:6px solid transparent;background:0 0;content:""}.leaflet-tooltip-bottom{margin-top:6px}.leaflet-tooltip-top{margin-top:-6px}.leaflet-tooltip-bottom:before,.leaflet-tooltip-top:before{left:50%;margin-left:-6px}.leaflet-tooltip-top:before{bottom:0;margin-bottom:-12px;border-top-color:#fff}.leaflet-tooltip-bottom:before{top:0;margin-top:-12px;margin-left:-6px;border-bottom-color:#fff}.leaflet-tooltip-left{margin-left:-6px}.leaflet-tooltip-right{margin-left:6px}.leaflet-tooltip-left:before,.leaflet-tooltip-right:before{top:50%;margin-top:-6px}.leaflet-tooltip-left:before{right:0;margin-right:-12px;border-left-color:#fff}.leaflet-tooltip-right:before{left:0;margin-left:-12px;border-right-color:#fff}@media print{.leaflet-control{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style>
+<style>
+/* Layout: field-operations console — map left, briefing panel right; tabs for sites table, downloads, method */
+:root{
+  --bg:#f4f3ef; --panel:#ffffff; --ink:#1c2321; --muted:#5f6b66; --line:#dcdcd4; --soft:#ecebe5;
+  --forest:#1f3b2d; --forest-ink:#e7efe9; --ember:#c2410c; --ember-soft:#fbe7dc; --ok:#2f7d4a; --warn:#b7791f; --bad:#b42318;
+  --m07:#ffe08a; --m08:#ffa53d; --m09:#f0532a; --m10:#b5002a;
+  --map-bg:#dfe3dc;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif; --body:"Barlow","Segoe UI",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121715;--panel:#1a211e;--ink:#e6ebe8;--muted:#9aa8a1;--line:#2d3833;--soft:#222b27;--forest:#16261e;--forest-ink:#d6e4da;--ember:#f07a3e;--ember-soft:#3a2219;--ok:#5fbf7f;--warn:#e0a648;--bad:#f0645a;--map-bg:#202824;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121715;--panel:#1a211e;--ink:#e6ebe8;--muted:#9aa8a1;--line:#2d3833;--soft:#222b27;--forest:#16261e;--forest-ink:#d6e4da;--ember:#f07a3e;--ember-soft:#3a2219;--ok:#5fbf7f;--warn:#e0a648;--bad:#f0645a;--map-bg:#202824;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1500px;margin-inline:auto}
+header.top{background:var(--forest);color:var(--forest-ink)}
+header.top .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:flex-end;justify-content:space-between;padding-block:14px 0}
+.brand h1{font-family:var(--display);font-weight:700;font-size:28px;letter-spacing:.01em;margin:0;line-height:1.05;text-wrap:balance}
+.brand p{margin:2px 0 10px;font-size:13px;opacity:.85}
+nav.tabs{display:flex;gap:2px;flex-wrap:wrap}
+nav.tabs button{font:600 14px var(--body);color:var(--forest-ink);background:transparent;border:0;padding:10px 14px;border-radius:6px 6px 0 0;cursor:pointer;opacity:.8}
+nav.tabs button[aria-selected="true"]{background:var(--bg);color:var(--ink);opacity:1}
+nav.tabs button:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+main{padding-block:14px 32px}
+.view[hidden]{display:none!important}
+.grid-map{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:14px;align-items:start}
+@media (max-width:980px){.grid-map{grid-template-columns:minmax(0,1fr)}}
+.controls{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-bottom:10px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.seg button{font:500 13px var(--body);border:0;background:transparent;color:var(--ink);padding:6px 10px;cursor:pointer;border-right:1px solid var(--line);display:inline-flex;align-items:center;gap:6px}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,.35)}
+.lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.mapbox{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--map-bg)}
+#map{height:min(72vh,760px);min-height:420px;background:var(--map-bg)}
+.layers{position:absolute;top:10px;right:10px;z-index:500;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;display:flex;flex-direction:column;gap:4px;max-width:220px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+.layers label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.layers .h{font-weight:600;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.legend{position:absolute;left:10px;bottom:10px;z-index:500;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;display:flex;flex-direction:column;gap:3px;box-shadow:0 2px 10px rgba(0,0,0,.15);max-width:260px}
+.legend summary,.layers summary{cursor:pointer;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.legend-body{display:flex;flex-direction:column;gap:3px;margin-top:4px}
+.legend .row{display:flex;gap:6px;align-items:center}
+.sw{width:14px;height:10px;display:inline-block;border-radius:2px;border:1px solid rgba(0,0,0,.25)}
+.zoombar{position:absolute;left:10px;top:10px;z-index:500;display:flex;gap:4px;flex-wrap:wrap;margin-left:44px}
+.zoombar button{font:600 12px var(--body);background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:5px 8px;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.15)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel h2{font-family:var(--display);font-weight:700;font-size:26px;line-height:1.05;margin:0;text-wrap:balance}
+.panel h3{font-size:14px;font-weight:600;margin:0}
+.meta{font-size:13px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.chip.bad{color:var(--bad)} .chip.warn{color:var(--warn)} .chip.ok{color:var(--ok)} .chip.mut{color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.kpi{background:var(--soft);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:1px;min-width:0}
+.kpi .k{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--display);font-weight:600;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .n{font-size:12px;color:var(--muted)}
+.chart svg{display:block;width:100%;height:auto}
+.btnrow{display:flex;flex-wrap:wrap;gap:6px}
+.btn{font:600 13px var(--body);background:var(--ink);color:var(--panel);border:1px solid var(--ink);border-radius:7px;padding:7px 11px;cursor:pointer;text-decoration:none;display:inline-flex;gap:6px;align-items:center}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn[disabled]{opacity:.5;cursor:progress}
+.provcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pcard{border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;background:transparent;color:inherit;text-align:left;font:inherit;display:flex;flex-direction:column;gap:2px}
+.pcard:hover{border-color:var(--ink)}
+.pcard .t{font-weight:600;font-size:13px}
+.pcard .v{font-family:var(--display);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.pcard .n{font-size:12px;color:var(--muted)}
+.note{font-size:12.5px;color:var(--muted)}
+.back{align-self:flex-start;font:600 12px var(--body);background:transparent;border:0;color:var(--muted);cursor:pointer;padding:0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:8px 14px;border-radius:8px;font-size:13px;z-index:2000}
+/* tables */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.tbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.tbar h2{font-family:var(--display);font-size:24px;margin:0}
+input[type=search],select{font:inherit;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--ink)}
+.tbox{overflow:auto;max-height:70vh}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th{position:sticky;top:0;background:var(--panel);text-align:left;font-weight:600;border-bottom:2px solid var(--line);padding:7px 8px;white-space:nowrap}
+th button{all:unset;cursor:pointer}
+td{padding:7px 8px;border-bottom:1px solid var(--line)}
+td.n,th.n{text-align:right}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--soft)}
+.bar{display:inline-block;height:8px;border-radius:4px;background:var(--ember);vertical-align:middle;margin-right:6px}
+@media (max-width:760px){.hn{display:none}}
+/* downloads */
+.dlgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:14px}
+.dlgroup h3{font-family:var(--display);font-size:20px;margin:0 0 4px}
+.dlgroup p{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.dlist{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.ditem{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.ditem span{min-width:0;overflow-wrap:anywhere}
+.ditem .sz{color:var(--muted);font-size:12px;white-space:nowrap}
+html.no-report .full-report{display:none!important}
+footer.site{border-top:1px solid var(--line);padding-block:14px 28px;font-size:12.5px;color:var(--muted)}
+.scroll{max-height:420px;overflow:auto}
+.about{max-width:75ch}
+.about h2{font-family:var(--display);font-size:24px;margin:18px 0 6px}
+.about p,.about li{font-size:14.5px}
+.leaflet-container{font-family:var(--body)}
+.leaflet-tooltip.site-tip{font:600 12px var(--body)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1>GEF Fire Watch PNG</h1>
+      <p>CEPA–FAO GEF7 (Western &amp; Eastern Highlands) and GEF8 (Western &amp; Gulf) · VIIRS fire alerts to <span id="hdr-date">…</span> · updated <span id="hdr-upd">…</span></p>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" id="t-map" aria-selected="true" data-view="map">Map</button>
+      <button role="tab" id="t-sites" aria-selected="false" data-view="sites">Sites</button>
+      <button role="tab" id="t-downloads" aria-selected="false" data-view="downloads">Downloads</button>
+      <button role="tab" id="t-about" aria-selected="false" data-view="about">Method</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="view" id="view-map">
+    <div class="controls">
+      <span class="lbl">Project</span>
+      <div class="seg" id="f-proj">
+        <button data-v="all" aria-pressed="true">All</button>
+        <button data-v="GEF7" aria-pressed="false">GEF7</button>
+        <button data-v="GEF8" aria-pressed="false">GEF8</button>
+      </div>
+      <span class="lbl">Month</span>
+      <div class="seg" id="f-month"></div>
+      <span class="meta" id="count-line">Loading fire alerts…</span>
+    </div>
+    <div class="grid-map">
+      <div class="mapbox">
+        <div id="map" role="region" aria-label="Fire alert map"></div>
+        <div class="zoombar">
+          <button data-z="all">All provinces</button>
+          <button data-z="gef7">Highlands</button>
+          <button data-z="gef8">Western &amp; Gulf</button>
+        </div>
+        <details class="layers" id="layers" open>
+          <summary>Layers</summary>
+          <label><input type="checkbox" id="l-fires" checked> Fire alerts</label>
+          <label><input type="checkbox" id="l-sites" checked> GEF sites</label>
+          <label><input type="checkbox" id="l-dist"> Districts by fire density</label>
+          <label><input type="checkbox" id="l-loge"> Logging, existing</label>
+          <label><input type="checkbox" id="l-logp"> Logging, proposed</label>
+          <label><input type="checkbox" id="l-el"> Mining leases</label>
+          <span class="h">Background</span>
+          <label><input type="radio" name="bg" id="bg-img" checked> Satellite imagery</label>
+          <label><input type="radio" name="bg" id="bg-plain"> Street map</label>
+        </details>
+        <details class="legend" id="legendbox" open><summary>Legend</summary><div id="legend" class="legend-body"></div></details>
+      </div>
+      <aside class="panel" id="panel" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="view" id="view-sites" hidden>
+    <div class="card">
+      <div class="tbar">
+        <div><h2>All 40 GEF sites</h2><div class="meta">Fire alerts in <span class="lab">this season</span> against the same period in earlier years. Click a row to open the site on the map.</div></div>
+        <div class="btnrow">
+          <select id="s-proj" aria-label="Project"><option value="">All projects</option><option>GEF7</option><option>GEF8</option></select>
+          <input type="search" id="s-q" placeholder="Search sites" aria-label="Search sites">
+        </div>
+      </div>
+      <div class="tbox">
+        <table id="s-table">
+          <thead><tr>
+            <th><button data-k="site">Site</button></th>
+            <th class="hn"><button data-k="project">Project</button></th>
+            <th class="hn"><button data-k="type">Type</button></th>
+            <th class="n hn"><button data-k="area_ha">Area (ha)</button></th>
+            <th class="n"><button data-k="fire_now">Fires this season</button></th>
+            <th class="n hn"><button data-k="fire_mean">Avg 2012–25</button></th>
+            <th class="n"><button data-k="ratio">vs avg</button></th>
+            <th class="n hn"><button data-k="ring_now">0–5 km</button></th>
+            <th class="n hn"><button data-k="ia_now">Integrated alerts</button></th>
+            <th class="n"><button data-k="tcl_total">Loss since 2001 (ha)</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-downloads" hidden>
+    <div class="dlgrid" id="dlgrid"></div>
+  </section>
+
+  <section class="view about" id="view-about" hidden>
+    <h2>What the map shows</h2>
+    <p>Each dot is a NASA VIIRS 375 m active-fire alert in the current fire season (<span class="lab"></span>), coloured by month. One fire can produce several alerts over several days, and heavy smoke or cloud can hide fires, so counts show fire activity, not burned area.</p>
+    <h2>How it updates</h2>
+    <p>The dashboard rebuilds itself automatically twice a day. It checks Global Forest Watch for new VIIRS fire alerts and, when there are any, refreshes every number, map and PDF report. Last update: <span id="upd2"></span>.</p>
+    <h2>How sites are compared</h2>
+    <p>For each site and province, alerts so far this season are compared with the same calendar period in every year since <span class="fy"></span>, using the Global Forest Watch Data API (the data behind PNG DAMS). Each site boundary is registered as a GFW geostore, so its PNG DAMS report opens for that exact boundary.</p>
+    <ul>
+      <li>Fires outside a site are counted in a ring around its boundary, using the alert points for the four project provinces. Sites that extend into Simbu, Jiwaka, Enga, Southern Highlands, Central or Morobe have minimum ring counts.</li>
+      <li>Integrated alerts (GLAD-L, GLAD-S2, RADD) count 10–30 m alert pixels, not hectares, and rise in dry, smoky years.</li>
+      <li>Tree cover loss is Hansen/UMD annual loss at more than 30% canopy.</li>
+      <li>District fire density is alerts per 100 km² on GADM 4.1 districts.</li>
+      <li>Proposed Mt Dorohere, Yasina, Artrohialika Lulume and Mt Giluwe, and the Kuk site, have no surveyed boundary yet, so each is a circle of its stated area around its GPS point.</li>
+    </ul>
+    <h2>Sources</h2>
+    <ul>
+      <li>NASA VIIRS fire alerts, Hansen/UMD tree cover loss and GFW integrated alerts: Global Forest Watch Data API.</li>
+      <li>Site, protected area, KBA, logging concession and mining lease layers: CEPA/FAO GEF7 and GEF8 project GIS.</li>
+      <li>Province and district boundaries: GADM 4.1. Basemaps: Esri World Imagery, OpenStreetMap.</li>
+    </ul>
+  </section>
+</main>
+<footer class="site"><div class="wrap">CEPA–FAO GEF7 &amp; GEF8 projects · GEF Fire Watch PNG. Data: NASA VIIRS via Global Forest Watch, Hansen/UMD, CEPA/FAO project GIS, GADM 4.1. Updated automatically; last update <span id="upd3"></span>.</div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){
+"use strict";
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const nf=new Intl.NumberFormat('en'); const f0=v=>v==null?'–':nf.format(Math.round(v)); const f1=v=>v==null?'–':v.toLocaleString('en',{maximumFractionDigits:1,minimumFractionDigits:1});
+let SEASON={}, CUR='', MKEYS=[], MCOL={}, MONTHS={}, MSHORT={}, LAB='', FY=2012;
+const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const RAMP=['#ffe08a','#ffa53d','#f0532a','#b5002a','#7a0026','#4d0019'];
+const monthOfDay=d=>new Date(Date.parse(SEASON.start)+d*864e5).toISOString().slice(0,7);
+function setupSeason(st){SEASON=st.season;LAB=SEASON.label;FY=SEASON.first_year;MKEYS=SEASON.months;
+  const n=MKEYS.length;MKEYS.forEach((m,i)=>{MCOL[m]=RAMP[Math.min(i,RAMP.length-1)];const mo=+m.slice(5)-1;let l=MN[mo];if(m===SEASON.end.slice(0,7)&&+SEASON.end.slice(8)<28)l='1–'+(+SEASON.end.slice(8))+' '+l;MONTHS[m]=l+' '+m.slice(0,4);MSHORT[m]=MN[mo].slice(0,3);});
+  CUR=Object.keys(st.provinces[Object.keys(st.provinces)[0]].years).sort().pop();
+  const end=new Date(SEASON.end+'T00:00:00Z');$('#hdr-date').textContent=end.getUTCDate()+' '+MN[end.getUTCMonth()].slice(0,3)+' '+end.getUTCFullYear();
+  ['#hdr-upd','#upd2','#upd3'].forEach(q=>{const e=$(q);if(e)e.textContent=SEASON.updated;});
+  $$('.lab').forEach(e=>e.textContent=LAB);$$('.fy').forEach(e=>e.textContent=FY);
+  const fm=$('#f-month');fm.replaceChildren(el('button',{'data-v':'all','aria-pressed':'true'},'Whole season'),...MKEYS.map(m=>el('button',{'data-v':m,'aria-pressed':'false'},el('i',{class:'dot',style:'background:'+MCOL[m]}),MSHORT[m])));
+  seg('f-month','month');
+}
+const PROVPROJ={'Western Highlands':'GEF7','Eastern Highlands':'GEF7','Western':'GEF8','Gulf':'GEF8'};
+const DAMS=gs=>'https://my.gfw-mapbuilder.org/v1.latest/index.html?appid=c8e4162ef1dd4891aad9b560ac88e55b&report=true&geostoreID='+gs+'&acLayer=user_features&acSublayer=undefined&objectid=undefined&b=webmap&l=en&d=5&ty=2001%2C2025&layers=&o=&gladconfirmed=false&gs='+SEASON.start+'&ge='+SEASON.end;
+const state={proj:'all',month:'all',sel:null};
+let plainLayer, D={}, map, fireLayer, siteLayer, distLayer, provLayer, logE, logP, elL, imgLayers=[];
+
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2600);}
+function el(tag,attrs={},...kids){const e=document.createElement(tag);for(const[k,v]of Object.entries(attrs)){if(k==='class')e.className=v;else if(k==='text')e.textContent=v;else if(k.startsWith('on'))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v);}kids.flat().forEach(c=>c!=null&&e.append(c.nodeType?c:document.createTextNode(c)));return e;}
+
+/* ---------- downloads ---------- */
+function saveBlob(blob,name){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);}
+async function saveZip(items,zipname,btn){
+  if(!window.JSZip){toast('Zip tool did not load');return;}
+  btn.disabled=true;const old=btn.textContent;
+  try{const z=new JSZip();let i=0;
+    for(const it of items){btn.textContent='Packing '+(++i)+'/'+items.length;const r=await fetch(it.url);if(!r.ok)throw new Error(it.url);z.file(it.name,await r.blob());}
+    btn.textContent='Compressing…';saveBlob(await z.generateAsync({type:'blob'}),zipname);toast('Saved '+zipname);}
+  catch(e){toast('Could not build '+zipname);}
+  finally{btn.disabled=false;btn.textContent=old;}
+}
+const dlBtn=(label,url,filename,ghost)=>el('a',{class:'btn'+(ghost?' ghost':''),href:url,download:filename},label);
+
+/* ---------- charts ---------- */
+function bars(items,opt){
+  // items: [{label, v, hl, tip}]
+  const W=360,H=150,l=34,r=6,t=16,b=22,iw=W-l-r,ih=H-t-b;
+  const max=Math.max(1,...items.map(d=>d.v),opt.ref||0);
+  const nice=(m)=>{const p=Math.pow(10,Math.floor(Math.log10(m)));const s=[1,2,2.5,5,10].map(x=>x*p).find(x=>x*4>=m)||m;return s;};
+  const step=nice(max), top=Math.ceil(max/step)*step;
+  const y=v=>t+ih-ih*v/top, bw=iw/items.length;
+  const ns='http://www.w3.org/2000/svg';const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('role','img');svg.setAttribute('aria-label',opt.title);
+  const mk=(n,a,txt)=>{const e=document.createElementNS(ns,n);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;svg.appendChild(e);return e;};
+  for(let v=0;v<=top+1e-9;v+=step){mk('line',{x1:l,x2:W-r,y1:y(v),y2:y(v),stroke:'var(--line)','stroke-width':1});mk('text',{x:l-4,y:y(v)+3.5,'text-anchor':'end','font-size':9.5,fill:'var(--muted)'},v>=1000?(v/1000)+'k':String(+v.toFixed(2)));}
+  const every=Math.ceil(items.length/12);
+  items.forEach((d,i)=>{const x=l+i*bw+bw*0.15,w=bw*0.7;const rr=mk('rect',{x,y:y(d.v),width:w,height:Math.max(0,t+ih-y(d.v)),rx:2,fill:d.hl?'var(--ember)':'var(--muted)','fill-opacity':d.hl?1:0.45});
+    const ti=document.createElementNS(ns,'title');ti.textContent=d.tip||(d.label+': '+d.v);rr.appendChild(ti);
+    if(i%every===0||d.hl)mk('text',{x:x+w/2,y:H-6,'text-anchor':'middle','font-size':9.5,fill:'var(--muted)'},d.label);
+    if(d.hl&&d.v>0)mk('text',{x:x+w/2,y:y(d.v)-3,'text-anchor':'middle','font-size':10,'font-weight':600,fill:'var(--ink)'},opt.fmt?opt.fmt(d.v):f0(d.v));});
+  if(opt.ref){mk('line',{x1:l,x2:W-r,y1:y(opt.ref),y2:y(opt.ref),stroke:'var(--ink)','stroke-dasharray':'4 3','stroke-width':1});mk('text',{x:l+4,y:y(opt.ref)-3,'font-size':9.5,fill:'var(--ink)'},opt.refLabel);}
+  return el('div',{class:'chart'},el('h3',{text:opt.title}),svg);
+}
+const yearItems=(years)=>Object.keys(years).sort().map(k=>({label:"'"+k.slice(2),v:+years[k],hl:k===CUR,tip:k+': '+f0(years[k])+' alerts'}));
+const monItems=(m)=>Object.keys(m).sort().map(k=>({label:MSHORT[k]||k,v:+m[k],tip:(MONTHS[k]||k)+': '+f0(m[k])+' alerts'}));
+function markMax(items){const mx=Math.max(...items.map(d=>d.v));items.forEach(d=>d.hl=d.v===mx&&mx>0);return items;}
+
+/* ---------- panel ---------- */
+const panel=$('#panel');
+function ratioClass(s){if(!s.fire_now)return['No fire alerts this season','mut'];if(s.ratio==null||s.ratio>=3)return['Fire well above normal','bad'];if(s.ratio>=1.5)return['Fire above normal','warn'];return['Fire near or below normal','ok'];}
+const ratioTxt=s=>s.ratio==null?(s.fire_now?'new':'–'):s.ratio.toFixed(1)+'×';
+function kpi(k,v,n){return el('div',{class:'kpi'},el('span',{class:'k',text:k}),el('span',{class:'v',text:v}),n?el('span',{class:'n',text:n}):null);}
+function renderOverview(){
+  state.sel=null;setHash('');highlight();
+  const P=D.stats.provinces;const names=Object.keys(P).filter(n=>state.proj==='all'||PROVPROJ[n]===state.proj);
+  const tot=names.reduce((a,n)=>a+P[n].years[CUR],0);const avgOf=y=>{const k=Object.keys(y).filter(x=>x!==CUR);return k.reduce((a,x)=>a+y[x],0)/k.length;};
+  const sites=D.stats.sites.filter(s=>state.proj==='all'||s.project.includes(state.proj));
+  const above=sites.filter(s=>s.fire_now>s.fire_mean&&s.fire_now>0).length, rec=sites.filter(s=>s.fire_rank===1&&s.fire_now>0).length;
+  panel.replaceChildren(
+    el('h2',{text:state.proj==='all'?'GEF7 & GEF8 provinces':state.proj+' provinces'}),
+    el('p',{class:'meta',text:`${f0(tot)} fire alerts in ${LAB}. ${above} of ${sites.length} project sites are above their average for this period, and ${rec} are at their highest since ${FY}.`}),
+    el('div',{class:'provcards'},names.map(n=>{const y=P[n].years;const avg=avgOf(y);
+      return el('button',{class:'pcard',onclick:()=>selectProvince(n)},el('span',{class:'t',text:n+' · '+PROVPROJ[n]}),el('span',{class:'v',text:f0(y[CUR])}),el('span',{class:'n',text:(y[CUR]/avg).toFixed(1)+'× average · '+Math.round(100*y[CUR]/y['2015'])+'% of 2015'}));})),
+    bars(yearItems(names.reduce((acc,n)=>{for(const k in P[n].years)acc[k]=(acc[k]||0)+P[n].years[k];return acc;},{})),{title:'Fire alerts in the same period of each year',ref:null}),
+    el('p',{class:'note',text:'Click a province card, a district or a site outline on the map for details, charts and downloads. Click a fire dot to see its date.'}),
+    el('div',{class:'btnrow'},el('a',{class:'btn ghost',href:'reports/fire_situation_summary.pdf',download:'GEF_fire_situation_summary.pdf'},'Summary report (PDF)'),el('button',{class:'btn ghost',onclick:()=>showView('downloads')},'All downloads'))
+  );
+}
+function selectProvince(n){
+  const p=D.stats.provinces[n];state.sel={kind:'prov',id:n};highlight();
+  const y=p.years;const yk=Object.keys(y).filter(k=>k!==CUR);const avg=yk.reduce((a,k)=>a+y[k],0)/yk.length;
+  const slug=n.toLowerCase().replace(/ /g,'-');
+  const dists=D.dist.features.filter(f=>f.properties.province===n).map(f=>f.properties).sort((a,b)=>b.fires-a.fires);
+  const sites=D.stats.sites.filter(s=>s.province.split('/').map(x=>x.trim()).map(x=>({EHP:'Eastern Highlands',WHP:'Western Highlands'}[x]||x)).includes(n));
+  const tcl=p.tcl||{};const ti=Object.keys(tcl).sort().map(k=>({label:"'"+k.slice(2),v:tcl[k].loss,tip:k+': '+f0(tcl[k].loss)+' ha ('+f0(tcl[k].fire)+' ha due to fire)'}));
+  panel.replaceChildren(
+    el('button',{class:'back',onclick:renderOverview},'← All provinces'),
+    el('h2',{text:n+' Province'}),
+    el('div',{class:'chips'},el('span',{class:'chip mut',text:p.project}),el('span',{class:'chip bad',text:(y[CUR]/avg).toFixed(1)+'× average'}),y[CUR]>y['2015']?el('span',{class:'chip bad',text:'Above 2015 El Niño'}):null),
+    el('div',{class:'kpis'},kpi('Fire alerts, '+LAB,f0(y[CUR]),'average '+f0(avg)+' in earlier years'),kpi('2015 El Niño, same period',f0(y['2015']),Math.round(100*y[CUR]/y['2015'])+'% of 2015 reached')),
+    bars(yearItems(y),{title:'Fire alerts in the same period of each year',ref:avg,refLabel:'earlier-years average'}),
+    bars(markMax(monItems(p.monthly)),{title:'Fire alerts by month, this season'}),
+    el('div',{},el('h3',{text:'Districts'}),el('table',{},el('tbody',{},dists.map(d=>el('tr',{onclick:()=>selectDistrict(d.name)},el('td',{text:d.name}),el('td',{class:'n',text:f0(d.fires)}),el('td',{class:'n meta',text:f1(d.density)+' /100 km²'})))))),
+    ti.length?bars(markMax(ti),{title:'Tree cover loss (ha)'+(n==='Western Highlands'?' · older, smaller GFW boundary':'')}):null,
+    el('div',{},el('h3',{text:sites.length+' GEF sites'}),el('table',{},el('tbody',{},sites.sort((a,b)=>b.fire_now-a.fire_now).map(s=>el('tr',{onclick:()=>selectSite(s.id,true)},el('td',{text:s.site}),el('td',{class:'n',text:f0(s.fire_now)}),el('td',{class:'n meta',text:ratioTxt(s)})))))),
+    el('div',{class:'btnrow'},dlBtn('Province report (PDF)','reports/provinces/'+slug+'.pdf','GEF_fire_'+slug+'_province_report.pdf'),dlBtn('Monthly district map (PNG)','maps/overview/'+{'Western Highlands':'monthly_whp','Eastern Highlands':'monthly_ehp','Western':'monthly_western','Gulf':'monthly_gulf'}[n]+'.png','GEF_fire_'+slug+'_monthly_map.png',true))
+  );
+  const f=D.prov.features.find(f=>f.properties.name===n);if(f)map.fitBounds(L.geoJSON(f).getBounds(),{padding:[20,20]});
+}
+function selectDistrict(name){
+  const d=D.dist.features.find(f=>f.properties.name===name);if(!d)return;const p=d.properties;state.sel={kind:'dist',id:name};highlight();
+  const mi=MKEYS.map(m=>({label:MSHORT[m],v:p.monthly[m]||0,tip:MONTHS[m]+': '+f0(p.monthly[m])+' alerts'}));
+  panel.replaceChildren(
+    el('button',{class:'back',onclick:()=>selectProvince(p.province)},'← '+p.province),
+    el('h2',{text:p.name+' District'}),
+    el('p',{class:'meta',text:p.province+' Province · '+p.project+' · '+f0(p.area_km2)+' km²'}),
+    el('div',{class:'kpis'},kpi('Fire alerts, '+LAB,f0(p.fires),f1(p.density)+' per 100 km²'),kpi('In primary forest',f0(p.prim),(p.ifl?f0(p.ifl)+' in intact forest landscape':'none in intact forest'))),
+    bars(markMax(mi),{title:'Fire alerts by month, this season'}),
+    el('p',{class:'note',text:'District counts join each alert point to GADM 4.1 district boundaries.'})
+  );
+  map.fitBounds(L.geoJSON(d).getBounds(),{padding:[20,20]});
+}
+function selectSite(id,zoom){
+  const s=D.stats.sites.find(x=>x.id===id);if(!s)return;state.sel={kind:'site',id};setHash(id);highlight();
+  const [ct,cc]=ratioClass(s);
+  panel.replaceChildren(
+    el('button',{class:'back',onclick:renderOverview},'← Overview'),
+    el('h2',{text:s.site}),
+    el('p',{class:'meta',text:[s.project,s.province,s.type,s.status,f0(s.area_ha)+' ha'].join(' · ')}),
+    el('div',{class:'chips'},el('span',{class:'chip '+cc,text:ct}),s.fire_rank===1&&s.fire_now>0?el('span',{class:'chip bad',text:'Highest since '+FY}):null),
+    el('div',{class:'kpis'},
+      kpi('Fire alerts, '+LAB,f0(s.fire_now),'average '+f1(s.fire_mean)+' in earlier years · '+ratioTxt(s)),
+      kpi('Fire alerts 0–'+D.stats.config.ring_km+' km outside',f0(s.ring_now),'same period'),
+      kpi('Integrated alerts, same period',f0(s.ia_now),'a year earlier: '+f0(s.ia_prev)),
+      kpi('Tree cover loss 2001–2025',f1(s.tcl_total)+' ha',(s.tcl_pct||0).toFixed(2)+'% of 2000 tree cover')),
+    bars(yearItems(s.years),{title:'Fire alerts in the same period of each year',ref:s.fire_mean||null,refLabel:'earlier-years average'}),
+    bars(markMax(monItems(s.monthly)),{title:'Fire alerts by month, this season'}),
+    bars(markMax(Object.keys(s.tcl).sort().map(k=>({label:"'"+k.slice(2),v:s.tcl[k],tip:k+': '+f1(s.tcl[k])+' ha'}))),{title:'Tree cover loss (ha) since 2001',fmt:f1}),
+    el('div',{class:'btnrow'},
+      dlBtn('Site report (PDF)','reports/sites/'+s.id+'.pdf','GEF_fire_'+s.id+'_report.pdf'),
+      dlBtn('Site map (JPG)','maps/sites/'+s.id+'.jpg','GEF_fire_'+s.id+'_map.jpg',true),
+      el('a',{class:'btn ghost',href:DAMS(s.geostore),target:'_blank',rel:'noopener'},'PNG DAMS report ↗')),
+    el('p',{class:'note',text:'Boundary: '+s.source+'. GFW geostore '+s.geostore+'.'})
+  );
+  if(zoom){showView('map');const f=D.sites.features.find(f=>f.properties.id===id);if(f)map.fitBounds(L.geoJSON(f).getBounds(),{padding:[60,60],maxZoom:13});}
+}
+function setHash(id){try{history.replaceState(null,'',id?'#'+id:location.pathname+location.search);}catch(e){}}
+
+/* ---------- map ---------- */
+const FireLayer=L.Layer.extend({
+  onAdd(m){this._m=m;this._c=L.DomUtil.create('canvas','fire-canvas');this._c.style.position='absolute';this._c.style.pointerEvents='none';m.getPanes().overlayPane.appendChild(this._c);
+    m.on('moveend zoomend resize viewreset',this._draw,this);m.on('zoomstart',this._hide,this);this._draw();},
+  onRemove(m){L.DomUtil.remove(this._c);m.off('moveend zoomend resize viewreset',this._draw,this);m.off('zoomstart',this._hide,this);},
+  _hide(){this._c.style.visibility='hidden';},
+  _draw(){const m=this._m,c=this._c,sz=m.getSize(),dpr=window.devicePixelRatio||1;c.style.visibility='visible';
+    L.DomUtil.setPosition(c,m.containerPointToLayerPoint([0,0]));c.width=sz.x*dpr;c.height=sz.y*dpr;c.style.width=sz.x+'px';c.style.height=sz.y+'px';
+    const g=c.getContext('2d');g.scale(dpr,dpr);const z=m.getZoom();const r=z<7?1.3:z<8?1.8:z<10?2.6:z<12?3.6:4.6;
+    const b=m.getBounds().pad(0.05);const rows=visibleFires();
+    const order=MKEYS;
+    for(const mo of order){g.fillStyle=MCOL[mo];g.strokeStyle='rgba(0,0,0,.55)';g.lineWidth=z>=9?0.6:0.3;g.beginPath();
+      for(const p of rows){if(p[5]!==mo)continue;if(p[1]<b.getSouth()||p[1]>b.getNorth()||p[0]<b.getWest()||p[0]>b.getEast())continue;const pt=m.latLngToContainerPoint([p[1],p[0]]);g.moveTo(pt.x+r,pt.y);g.arc(pt.x,pt.y,r,0,6.2832);}
+      g.fill();if(z>=8)g.stroke();}
+  }
+});
+function visibleFires(){const pi=D.fires.provinces;return D.firesRows.filter(p=>(state.proj==='all'||PROVPROJ[pi[p[3]]]===state.proj)&&(state.month==='all'||p[5]===state.month));}
+function distColor(v){const br=[1,5,15,30,60,100],cs=['#fff3e0','#ffd8a8','#ffb070','#f57c3a','#d9480f','#a61e0b','#6b0f06'];let i=0;while(i<br.length&&v>=br[i])i++;return cs[i];}
+function distVal(p){return state.month==='all'?p.density:(100*(p.monthly[state.month]||0)/p.area_km2);}
+function siteColor(s){if(!s)return'#888';if(!s.fire_now)return'#9aa3a0';if(s.ratio==null||s.ratio>=3)return'#e5383b';if(s.ratio>=1.5)return'#f2a541';return'#3fbf6f';}
+function highlight(){
+  if(siteLayer)siteLayer.eachLayer(l=>{const id=l.feature.properties.id;const s=D.siteById[id];const on=state.sel&&state.sel.kind==='site'&&state.sel.id===id;const vis=state.proj==='all'||s.project.includes(state.proj);
+    l.setStyle({color:on?'#00e5ff':siteColor(s),weight:on?3.5:2,opacity:vis?1:0.15,fillOpacity:vis?(on?0.18:0.08):0,dashArray:s.status.startsWith('Proposed')||s.type.startsWith('Proposed')?'6 4':null});});
+  if(distLayer)distLayer.setStyle(f=>{const p=f.properties;const vis=state.proj==='all'||p.project===state.proj;const on=state.sel&&state.sel.kind==='dist'&&state.sel.id===p.name;return{color:on?'#00e5ff':'#333',weight:on?3:0.8,fillColor:distColor(distVal(p)),fillOpacity:vis?0.62:0,opacity:vis?0.9:0.2};});
+  if(provLayer)provLayer.setStyle(f=>{const on=state.sel&&state.sel.kind==='prov'&&state.sel.id===f.properties.name;const vis=state.proj==='all'||f.properties.project===state.proj;return{color:on?'#00e5ff':'#fff',weight:on?3.5:2,fill:true,fillOpacity:0,opacity:vis?0.95:0.35};});
+}
+function updateCount(){const n=visibleFires().length;$('#count-line').textContent=f0(n)+' fire alerts shown ('+(state.month==='all'?LAB:MONTHS[state.month])+')';}
+function legend(){
+  const L_=$('#legend');L_.replaceChildren(el('strong',{text:'Fire alerts this season'}),...MKEYS.filter(m=>state.month==='all'||m===state.month).map(m=>el('div',{class:'row'},el('i',{class:'dot',style:'background:'+MCOL[m]}),MONTHS[m])));
+  if($('#l-sites').checked)L_.append(el('strong',{text:'Sites: fire vs average'}),...[['#e5383b','Over 3× or first on record'],['#f2a541','1.5–3×'],['#3fbf6f','Near or below average'],['#9aa3a0','No alerts this season']].map(([c,t])=>el('div',{class:'row'},el('i',{class:'sw',style:'background:transparent;border:2px solid '+c}),t)),el('div',{class:'row note',text:'Dashed outline: proposed area'}));
+  if($('#l-dist').checked)L_.append(el('strong',{text:'District alerts per 100 km²'}),el('div',{class:'row'},...[0.5,3,10,20,45,80,150].map(v=>el('i',{class:'sw',style:'background:'+distColor(v)})),' 0 → 100+'));
+  const ov=[['l-loge','#8e44ad','Logging, existing'],['l-logp','#c39bd3','Logging, proposed'],['l-el','#2e86c1','Mining exploration lease']].filter(o=>$('#'+o[0]).checked);
+  ov.forEach(([_,c,t])=>L_.append(el('div',{class:'row'},el('i',{class:'sw',style:'background:'+c+'40;border:1.5px solid '+c}),t)));
+}
+function refresh(){highlight();if(fireLayer&&map.hasLayer(fireLayer))fireLayer._draw();updateCount();legend();if(!state.sel)renderOverview();}
+
+async function init(){
+  const files=['stats','provinces','districts','sites','fires'];
+  const [stats,prov,dist,sites,fires]=await Promise.all(files.map(f=>fetch('data/'+f+(f==='stats'||f==='fires'?'.json':'.geojson'),{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(f);return r.json();})));
+  setupSeason(stats);dist.features.forEach(f=>Object.assign(f.properties,stats.districts.find(d=>d.name===f.properties.name)||{monthly:{},fires:0,density:0}));D={stats,prov,dist,sites,fires};D.siteById={};stats.sites.forEach(s=>D.siteById[s.id]=s);
+  D.firesRows=fires.rows.map(r=>{r[5]=monthOfDay(r[2]);return r;});
+  map=L.map('map',{zoomSnap:0.5,preferCanvas:true,attributionControl:true,maxBounds:[[-11.5,139],[-3.5,148.5]],minZoom:6});
+  map.attributionControl.setPrefix(false);
+  imgLayers=[L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery &copy; Esri, Maxar, Earthstar Geographics'})];
+  plainLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap contributors'});
+  imgLayers.forEach(l=>l.addTo(map));
+  provLayer=L.geoJSON(prov,{style:{color:'#fff',weight:2,fillOpacity:0},onEachFeature:(f,l)=>{l.bindTooltip(f.properties.name+' · '+f0(stats.provinces[f.properties.name].season_points)+' alerts this season',{sticky:true});l.on('click',e=>{L.DomEvent.stopPropagation(e);if(!pickFire(e))selectProvince(f.properties.name);});}}).addTo(map);
+  distLayer=L.geoJSON(dist,{onEachFeature:(f,l)=>{l.bindTooltip(()=>f.properties.name+': '+f0(state.month==='all'?f.properties.fires:f.properties.monthly[state.month])+' alerts',{sticky:true});l.on('click',e=>{L.DomEvent.stopPropagation(e);if(!pickFire(e))selectDistrict(f.properties.name);});}});
+  const ov=(c,fill)=>({color:c,weight:1.2,fillColor:c,fillOpacity:fill});
+  fetch('data/logging_existing.geojson').then(r=>r.json()).then(j=>{logE=L.geoJSON(j,{style:ov('#8e44ad',0.18),onEachFeature:(f,l)=>l.bindTooltip('Logging (existing): '+(f.properties.name||''),{sticky:true})});syncLayers();});
+  fetch('data/logging_proposed.geojson').then(r=>r.json()).then(j=>{logP=L.geoJSON(j,{style:ov('#c39bd3',0.18),onEachFeature:(f,l)=>l.bindTooltip('Logging (proposed): '+(f.properties.name||''),{sticky:true})});syncLayers();});
+  fetch('data/mining_el.geojson').then(r=>r.json()).then(j=>{elL=L.geoJSON(j,{style:ov('#2e86c1',0.12),onEachFeature:(f,l)=>l.bindTooltip('Mining EL: '+(f.properties.name||''),{sticky:true})});syncLayers();});
+  siteLayer=L.geoJSON(sites,{onEachFeature:(f,l)=>{const s=D.siteById[f.properties.id];l.bindTooltip(s.site+' · '+f0(s.fire_now)+' alerts ('+ratioTxt(s)+')',{sticky:true,className:'site-tip'});l.on('click',e=>{L.DomEvent.stopPropagation(e);selectSite(s.id,false);});}});
+  fireLayer=new FireLayer();
+  map.on('click',e=>{pickFire(e);});
+  zoomTo('all');syncLayers();
+  const h=location.hash.slice(1);if(h&&D.siteById[h])selectSite(h,true);else renderOverview();
+  refresh();buildSites();buildDownloads();
+}
+function pickFire(e){
+  if(!map.hasLayer(fireLayer))return false;const pt=map.latLngToContainerPoint(e.latlng);let best=null,bd=64;
+  for(const p of visibleFires()){const q=map.latLngToContainerPoint([p[1],p[0]]);const d=(q.x-pt.x)**2+(q.y-pt.y)**2;if(d<bd){bd=d;best=p;}}
+  if(!best)return false;const dt=new Date(Date.parse(SEASON.start)+best[2]*864e5);const fl=best[4];
+  L.popup().setLatLng([best[1],best[0]]).setContent(`<strong>VIIRS fire alert</strong><br>${dt.toUTCString().slice(5,16)} · ${D.fires.provinces[best[3]]}<br>${fl&1?'Tree cover over 30% (2000)':'Low tree cover'}${fl&2?' · primary forest':''}${fl&4?' · intact forest landscape':''}<br>${best[1].toFixed(4)}, ${best[0].toFixed(4)}`).openOn(map);return true;
+}
+function syncLayers(){
+  const t=(on,l)=>{if(!l)return;on?(!map.hasLayer(l)&&l.addTo(map)):(map.hasLayer(l)&&map.removeLayer(l));};
+  t($('#l-dist').checked,distLayer);t($('#l-loge').checked,logE);t($('#l-logp').checked,logP);t($('#l-el').checked,elL);
+  t($('#l-sites').checked,siteLayer);t($('#l-fires').checked,fireLayer);
+  imgLayers.forEach(l=>t($('#bg-img').checked,l));t($('#bg-plain').checked,plainLayer);
+  if(provLayer)provLayer.bringToFront();if(siteLayer&&map.hasLayer(siteLayer))siteLayer.bringToFront();
+  legend();highlight();
+}
+function zoomTo(k){const B={all:[[-9.6,140.8],[-4.9,146.5]],gef7:[[-7.0,143.6],[-5.1,146.4]],gef8:[[-9.6,140.8],[-5.0,146.3]]};map.fitBounds(B[k]);}
+
+/* ---------- sites table ---------- */
+let sk='fire_now',sd=-1;
+function buildSites(){
+  $$('#s-table th button').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.k;if(sk===k)sd=-sd;else{sk=k;sd=['site','project','type'].includes(k)?1:-1;}drawSites();}));
+  $('#s-q').addEventListener('input',drawSites);$('#s-proj').addEventListener('change',drawSites);drawSites();
+}
+function drawSites(){
+  const q=$('#s-q').value.toLowerCase(),pj=$('#s-proj').value;
+  const val=(s,k)=>k==='ratio'?(s.ratio==null?(s.fire_now?1e9:-1):s.ratio):s[k];
+  const rows=D.stats.sites.filter(s=>(!pj||s.project.includes(pj))&&(!q||(s.site+' '+s.province+' '+s.type).toLowerCase().includes(q))).sort((a,b)=>{const x=val(a,sk),y=val(b,sk);return(x<y?-1:x>y?1:0)*sd;});
+  $$('#s-table th').forEach(th=>th.setAttribute('aria-sort',th.querySelector('button').dataset.k===sk?(sd>0?'ascending':'descending'):'none'));
+  const mx=Math.max(...D.stats.sites.map(s=>s.fire_now));
+  $('#s-table tbody').replaceChildren(...rows.map(s=>el('tr',{onclick:()=>selectSite(s.id,true)},
+    el('td',{text:s.site}),el('td',{class:'hn',text:s.project}),el('td',{class:'hn',text:s.type}),el('td',{class:'n hn',text:f0(s.area_ha)}),
+    el('td',{class:'n'},el('i',{class:'bar',style:'width:'+Math.round(46*Math.sqrt(s.fire_now/mx))+'px'}),f0(s.fire_now)),el('td',{class:'n hn',text:f1(s.fire_mean)}),
+    el('td',{class:'n',style:'color:'+(ratioClass(s)[1]==='bad'?'var(--bad)':ratioClass(s)[1]==='warn'?'var(--warn)':'inherit'),text:ratioTxt(s)}),el('td',{class:'n hn',text:f0(s.ring_now)}),el('td',{class:'n hn',text:f0(s.ia_now)}),el('td',{class:'n',text:f1(s.tcl_total)}))));
+}
+
+/* ---------- downloads ---------- */
+function buildDownloads(){
+  const S=D.stats.sites.slice().sort((a,b)=>a.project.localeCompare(b.project)||a.site.localeCompare(b.site));
+  const item=(name,url,fn)=>el('div',{class:'ditem'},el('span',{},name),dlBtn('Save',url,fn,true));
+  const group=(title,desc,items,zip)=>el('div',{class:'card dlgroup'},el('h3',{text:title}),el('p',{text:desc}),zip||null,el('div',{class:'dlist scroll'},items));
+  const zipBtn=(label,list,zn)=>el('div',{class:'btnrow',style:'margin-bottom:8px'},el('button',{class:'btn',onclick:e=>saveZip(list,zn,e.currentTarget)},label));
+  const tag=SEASON.end;
+  const PROV=Object.keys(D.stats.provinces).map(n=>[n,D.stats.provinces[n].slug]);
+  const ov=[['All GEF7 & GEF8 provinces, fire alerts','overview_all'],['GEF7 sites and fires','sites_gef7'],['GEF8 sites and fires','sites_gef8'],...PROV.map(([n,sl])=>[n+' by district and month','monthly_'+sl])];
+  const data=[['Site summary (CSV)','downloads/site_summary.csv','site_summary.csv'],['Site fire alerts by year (CSV)','downloads/site_fire_alerts_by_year.csv','site_fire_alerts_by_year.csv'],
+    ['Site fire alerts by month (CSV)','downloads/site_fire_alerts_by_month.csv','site_fire_alerts_by_month.csv'],['Site tree cover loss (CSV)','downloads/site_tree_cover_loss_ha.csv','site_tree_cover_loss_ha.csv'],
+    ['District fire alerts (CSV)','downloads/district_fire_alerts.csv','district_fire_alerts.csv'],['Province fire alerts by year (CSV)','downloads/province_fire_alerts_by_year.csv','province_fire_alerts_by_year.csv'],
+    ['VIIRS fire alert points this season (CSV)','downloads/viirs_fire_alerts_season.csv','viirs_fire_alerts_season.csv'],['Site boundaries with statistics (GeoJSON)','downloads/gef_sites_fire.geojson','gef_sites_fire.geojson'],
+    ['Province boundaries (GeoJSON)','data/provinces.geojson','provinces.geojson'],['District boundaries (GeoJSON)','data/districts.geojson','districts.geojson'],
+    ['Logging concessions, existing (GeoJSON)','data/logging_existing.geojson','logging_concessions_existing.geojson'],['Logging concessions, proposed (GeoJSON)','data/logging_proposed.geojson','logging_concessions_proposed.geojson'],
+    ['Mining exploration leases (GeoJSON)','data/mining_el.geojson','mining_exploration_leases.geojson']];
+  $('#dlgrid').replaceChildren(
+    el('div',{class:'card dlgroup'},el('h3',{text:'Fire situation summary'}),el('p',{text:'A three-page summary of the dashboard: key points, overview map, province trends, the district table and all project sites. It is regenerated with every update.'}),el('a',{class:'btn',href:'reports/fire_situation_summary.pdf',download:'GEF_fire_situation_summary_'+tag+'.pdf'},'Download summary (PDF)')),
+    group('Province reports','Two-page PDF per province: key figures, monthly district maps, trends and the GEF sites in it.',PROV.map(([n,sl])=>item(n+' (PDF)','reports/provinces/'+sl+'.pdf','GEF_fire_'+sl+'_'+tag+'.pdf')),
+      zipBtn('Save all (zip)',PROV.map(([n,sl])=>({url:'reports/provinces/'+sl+'.pdf',name:sl+'.pdf'})),'GEF_fire_province_reports_'+tag+'.zip')),
+    group('Site reports',"Two-page PDF per site: satellite map with this season's fires, key figures, fire trend, fires by month and tree cover loss.",S.map(s=>item(s.site+' · '+s.project,'reports/sites/'+s.id+'.pdf','GEF_fire_'+s.id+'_'+tag+'.pdf')),
+      zipBtn('Save all '+S.length+' (zip)',S.map(s=>({url:'reports/sites/'+s.id+'.pdf',name:s.project.replace(/ & /,'_')+'/'+s.id+'.pdf'})),'GEF_fire_site_reports_'+tag+'.zip')),
+    group('Overview maps','Province, project and monthly district maps (PNG).',ov.map(([t,f])=>item(t,'maps/overview/'+f+'.png',f+'_'+tag+'.png')),
+      zipBtn('Save all (zip)',ov.map(([t,f])=>({url:'maps/overview/'+f+'.png',name:f+'.png'})),'GEF_fire_overview_maps_'+tag+'.zip')),
+    group('Site maps',"Satellite map of each site with its ring and this season's fire alerts by month (JPG).",S.map(s=>item(s.site,'maps/sites/'+s.id+'.jpg','GEF_fire_'+s.id+'_map_'+tag+'.jpg')),
+      zipBtn('Save all '+S.length+' (zip)',S.map(s=>({url:'maps/sites/'+s.id+'.jpg',name:s.id+'.jpg'})),'GEF_fire_site_maps_'+tag+'.zip')),
+    group('Data','Tables and GIS layers behind the dashboard, as of the latest update.',data.map(([t,u,f])=>item(t,u,f.replace(/(\.[a-z]+)$/,'_'+tag+'$1'))),
+      zipBtn('Save GIS layers and tables (zip)',data.map(([t,u,f])=>({url:u,name:f})),'GEF_fire_GIS_layers_and_tables_'+tag+'.zip'))
+  );
+}
+
+/* ---------- tabs and controls ---------- */
+function showView(v){$$('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.view===v?'true':'false'));$$('.view').forEach(s=>s.hidden=s.id!=='view-'+v);if(v==='map'&&map)setTimeout(()=>map.invalidateSize(),50);}
+$$('nav.tabs button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+const seg=(id,key)=>$$('#'+id+' button').forEach(b=>b.addEventListener('click',()=>{$$('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));state[key]=b.dataset.v;refresh();}));
+seg('f-proj','proj');
+$$('#layers input').forEach(i=>i.addEventListener('change',syncLayers));
+$$('.zoombar button').forEach(b=>b.addEventListener('click',()=>zoomTo(b.dataset.z)));
+if(window.innerWidth<700){$('#layers').removeAttribute('open');$('#legendbox').removeAttribute('open');}
+init().catch(e=>{panel.replaceChildren(el('h2',{text:'Data did not load'}),el('p',{class:'meta',text:'Reload the page. If it keeps failing, the data files may still be uploading.'}));console.error(e);});
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+geopandas>=0.14
+shapely>=2.0
+pandas>=2.0
+numpy
+matplotlib>=3.8
+contextily>=1.5
+requests
+pyogrio

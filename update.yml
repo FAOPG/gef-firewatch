@@ -1,0 +1,79 @@
+name: Update GEF Fire Watch
+
+on:
+  schedule:
+    # Twice a day: 08:15 and 20:15 Papua New Guinea time (UTC+10)
+    - cron: "15 22 * * *"
+    - cron: "15 10 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Rebuild even if no new fire data"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths: ["index.html", "inputs/**", "pipeline/**", "config.json", ".github/workflows/**"]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      changed: ${{ steps.data.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pipeline/requirements.txt
+      - run: pip install -r pipeline/requirements.txt
+      - name: Fetch fire data from Global Forest Watch
+        id: data
+        env:
+          GFW_API_KEY: ${{ secrets.GFW_API_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          FORCE=""
+          if [ "${{ github.event_name }}" = "push" ] || [ "${{ inputs.force }}" = "true" ]; then FORCE="--force"; fi
+          python pipeline/update.py --out _site $FORCE
+      - name: Make maps and reports
+        if: steps.data.outputs.changed == 'true'
+        run: python pipeline/outputs.py --out _site
+      - name: Assemble site
+        if: steps.data.outputs.changed == 'true'
+        run: |
+          cp index.html _site/
+          touch _site/.nojekyll
+      - name: Save new geostores (if any sites were added)
+        if: steps.data.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add inputs/sites.geojson
+          if ! git diff --cached --quiet; then git commit -m "Record GFW geostores for new sites" && git push || true; fi
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.data.outputs.changed == 'true'
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
